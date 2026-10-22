@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CalcPro — Standard &amp; Scientific Calculator</title>
-  <meta name="description" content="CalcPro is a fast, modern, responsive calculator with standard and scientific modes. Trigonometry, powers, roots, logarithms, factorials, memory, history and keyboard support — all in one HTML file." />
+  <title>CalcPro — A Light, Modern Scientific Calculator</title>
+  <meta name="description" content="A light, modern, fully responsive calculator with a standard and complete scientific mode. Trigonometry, powers, roots, logarithms, memory and history — private, fast and free." />
   <meta name="author" content="Maryam Mumtaz" />
-  <meta name="theme-color" content="#070b14" />
+  <meta name="theme-color" content="#f6f7fb" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="CalcPro — Standard &amp; Scientific Calculator" />
-  <meta property="og:description" content="A modern, responsive calculator with a complete scientific toolkit — built as one HTML file with Tailwind CSS and vanilla JavaScript." />
+  <meta property="og:title" content="CalcPro — A Light, Modern Scientific Calculator" />
+  <meta property="og:description" content="Standard and scientific calculation in a clean, focused workspace. Open source, private and free." />
   <meta property="og:url" content="https://maryammumtaz-piaic.github.io/calcpro-calculator/" />
   <meta name="twitter:card" content="summary" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23070b14'/%3E%3Cpath d='M18 21h28M18 32h28M18 43h12' stroke='%2322d3ee' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23ffffff'/%3E%3Cpath d='M18 21h28M18 32h28M18 43h12' stroke='%234f46e5' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,11 +28,13 @@
             mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
           },
           colors: {
-            base: '#070b14',
-            panel: '#0b1220'
+            base: '#f6f7fb',
+            panel: '#ffffff'
           },
           boxShadow: {
-            glow: '0 0 90px -20px rgba(34, 211, 238, 0.45)'
+            soft: '0 24px 60px -36px rgba(15, 23, 42, 0.28)',
+            card: '0 18px 50px -30px rgba(15, 23, 42, 0.22)',
+            lift: '0 30px 80px -40px rgba(15, 23, 42, 0.38)'
           }
         }
       }
@@ -40,181 +42,56 @@
   </script>
 
   <style>
-    :root { color-scheme: dark; }
+    :root { color-scheme: light; }
     * { -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
-    body { background-color: #070b14; }
-    ::selection { background: rgba(34, 211, 238, 0.28); color: #ffffff; }
+    body { background-color: #f6f7fb; }
+    ::selection { background: rgba(79, 70, 229, 0.18); color: #0f172a; }
 
     .grid-bg {
       background-image:
-        linear-gradient(to right, rgba(148, 163, 184, 0.065) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(148, 163, 184, 0.065) 1px, transparent 1px);
+        linear-gradient(to right, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
       background-size: 56px 56px;
-      -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 0%, #000 55%, transparent 100%);
-      mask-image: radial-gradient(ellipse 72% 62% at 50% 0%, #000 55%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 0%, #000 45%, transparent 100%);
+      mask-image: radial-gradient(ellipse 72% 62% at 50% 0%, #000 45%, transparent 100%);
     }
-
-    .glass {
-      background: linear-gradient(160deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .key {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 3rem;
-      border-radius: 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.05);
-      color: #e2e8f0;
-      font-size: 0.95rem;
-      font-weight: 500;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-    }
-    .key:hover { background: rgba(255, 255, 255, 0.1); }
-    .key:active { transform: translateY(1px) scale(0.985); }
-    .key:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
-
-    .key-num { background: rgba(255, 255, 255, 0.055); font-size: 1.05rem; font-weight: 600; }
-    .key-fn { background: rgba(148, 163, 184, 0.08); color: #cbd5e1; font-size: 0.9rem; }
-    .key-fn:hover { background: rgba(148, 163, 184, 0.16); }
-    .key-op {
-      background: rgba(99, 102, 241, 0.16);
-      border-color: rgba(129, 140, 248, 0.22);
-      color: #c7d2fe;
-      font-size: 1.15rem;
-      font-weight: 600;
-    }
-    .key-op:hover { background: rgba(99, 102, 241, 0.26); }
-    .key-danger {
-      background: rgba(244, 63, 94, 0.12);
-      border-color: rgba(251, 113, 133, 0.2);
-      color: #fda4af;
-      font-weight: 600;
-      font-size: 0.85rem;
-    }
-    .key-danger:hover { background: rgba(244, 63, 94, 0.2); }
-    .key-equals {
-      height: auto;
-      min-height: 100%;
-      background: linear-gradient(135deg, #22d3ee, #6366f1);
-      border: none;
-      color: #04101a;
-      font-size: 1.35rem;
-      font-weight: 700;
-      box-shadow: 0 10px 30px -10px rgba(34, 211, 238, 0.55);
-    }
-    .key-equals:hover { filter: brightness(1.08); background: linear-gradient(135deg, #22d3ee, #6366f1); }
-
-    .key-sci {
-      height: 2.4rem;
-      border-radius: 0.75rem;
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: #cbd5e1;
-    }
-    .key-sci-fn {
-      background: rgba(99, 102, 241, 0.1);
-      border-color: rgba(129, 140, 248, 0.14);
-      color: #c7d2fe;
-    }
-    .key-sci-fn:hover { background: rgba(99, 102, 241, 0.2); }
-    .key-const {
-      background: rgba(34, 211, 238, 0.08);
-      border-color: rgba(34, 211, 238, 0.14);
-      color: #67e8f9;
-    }
-    .key-const:hover { background: rgba(34, 211, 238, 0.16); }
-    .key-mem {
-      height: 2rem;
-      border-radius: 0.6rem;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: #94a3b8;
-      background: transparent;
-      border-color: transparent;
-    }
-    .key-mem:hover { background: rgba(255, 255, 255, 0.06); color: #e2e8f0; }
-
-    .tab-btn {
-      padding: 0.45rem 0.85rem;
-      border-radius: 0.55rem;
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: #94a3b8;
-      transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-      white-space: nowrap;
-    }
-    .tab-btn:hover { color: #f1f5f9; }
-    .tab-btn.is-active {
-      background: #f8fafc;
-      color: #0f172a;
-      box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.65);
-    }
-    .tab-btn:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
-
-    .angle-btn {
-      padding: 0.3rem 0.5rem;
-      border-radius: 0.4rem;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: #64748b;
-      transition: all 0.15s ease;
-    }
-    .angle-btn:hover { color: #cbd5e1; }
-    .angle-btn.is-active { background: rgba(34, 211, 238, 0.14); color: #67e8f9; }
-    .angle-btn:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
-
-    .history-item {
-      display: block;
-      width: 100%;
-      text-align: right;
-      padding: 0.5rem 0.65rem;
-      border-radius: 0.7rem;
-      border: 1px solid transparent;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
-    }
-    .history-item:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.06); }
-    .history-item:focus-visible { outline: 2px solid #22d3ee; outline-offset: 1px; }
-
-    .no-scrollbar { scrollbar-width: none; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .thin-scroll { scrollbar-width: thin; scrollbar-color: rgba(148, 163, 184, 0.25) transparent; }
-    .thin-scroll::-webkit-scrollbar { width: 6px; }
-    .thin-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.25); border-radius: 999px; }
-
-    #resultDisplay { cursor: copy; }
 
     .blob {
       position: absolute;
       border-radius: 9999px;
       filter: blur(90px);
-      opacity: 0.5;
+      opacity: 0.6;
       pointer-events: none;
     }
 
-    @keyframes shake {
-      10%, 90% { transform: translateX(-1px); }
-      20%, 80% { transform: translateX(2px); }
-      30%, 50%, 70% { transform: translateX(-3px); }
-      40%, 60% { transform: translateX(3px); }
+    .mock-key {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2.05rem;
+      border-radius: 0.6rem;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #334155;
+      font-size: 0.7rem;
+      font-weight: 500;
+      line-height: 1;
+      user-select: none;
     }
-    .shake { animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+    .mock-key-fn { background: #eef2ff; border-color: #e0e7ff; color: #4f46e5; }
+    .mock-key-op { background: #f1f5f9; color: #475569; }
+    .mock-key-danger { background: #fff1f2; border-color: #ffe4e6; color: #e11d48; font-weight: 600; }
+    .mock-key-equals {
+      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+      border: none;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+    }
 
-    @media (min-width: 640px) {
-      .key { height: 3.4rem; }
-      .key-sci { height: 2.7rem; font-size: 0.78rem; }
-      .key-mem { height: 2.15rem; font-size: 0.68rem; }
-    }
+    .no-scrollbar { scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -227,402 +104,445 @@
   </style>
 </head>
 
-<body class="min-h-screen bg-base font-sans text-slate-100 antialiased">
+<body class="min-h-screen bg-base font-sans text-slate-900 antialiased">
+
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">Skip to content</a>
 
   <!-- ================= NAVBAR ================= -->
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-[#070b14]/80 backdrop-blur-xl">
+  <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
     <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Main navigation">
-      <a href="#top" class="flex items-center gap-2.5" aria-label="CalcPro home">
-        <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-cyan-300 to-indigo-500 text-[#06101c] shadow-lg shadow-cyan-500/20">
+      <a href="index.html" class="flex items-center gap-2.5" aria-label="CalcPro home">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-white shadow-lg shadow-indigo-500/20">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5" aria-hidden="true">
             <rect x="5" y="2.5" width="14" height="19" rx="2.5" />
             <path d="M8.5 7h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h7" stroke-linecap="round" />
           </svg>
         </span>
-        <span class="text-lg font-bold tracking-tight">Calc<span class="text-cyan-400">Pro</span></span>
+        <span class="text-lg font-bold tracking-tight text-slate-900">Calc<span class="text-indigo-600">Pro</span></span>
       </a>
 
-      <div class="hidden items-center gap-8 text-sm font-medium text-slate-400 md:flex">
-        <a href="#calculator" class="transition hover:text-white">Calculator</a>
-        <a href="#features" class="transition hover:text-white">Features</a>
-        <a href="#guide" class="transition hover:text-white">Guide</a>
+      <div class="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
+        <a href="calculator.html" class="transition hover:text-slate-900">Calculator</a>
+        <a href="#features" class="transition hover:text-slate-900">Features</a>
+        <a href="#workspace" class="transition hover:text-slate-900">Workspace</a>
+        <a href="#guide" class="transition hover:text-slate-900">Guide</a>
       </div>
 
       <div class="flex items-center gap-2">
         <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator" target="_blank" rel="noopener noreferrer"
-           class="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white">
+           class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900">
           <svg viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" aria-hidden="true">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
           </svg>
           <span class="hidden sm:inline">GitHub</span>
         </a>
-        <a href="#calculator" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-cyan-50">
-          Open app
+        <a href="calculator.html" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-500">
+          Open calculator
         </a>
       </div>
     </nav>
   </header>
 
-  <main id="top" class="relative pt-16">
+  <main id="main" class="relative">
 
     <!-- ================= HERO ================= -->
     <section class="relative overflow-hidden">
       <div class="grid-bg absolute inset-0" aria-hidden="true"></div>
-      <div class="blob -left-24 top-10 h-72 w-72 bg-cyan-500/30" aria-hidden="true"></div>
-      <div class="blob -right-24 top-32 h-80 w-80 bg-indigo-600/30" aria-hidden="true"></div>
+      <div class="blob -left-32 -top-20 h-80 w-80 bg-indigo-200/70" aria-hidden="true"></div>
+      <div class="blob -right-24 top-20 h-96 w-96 bg-cyan-200/60" aria-hidden="true"></div>
 
-      <div class="relative mx-auto max-w-6xl px-4 pb-14 pt-16 text-center sm:px-6 sm:pb-20 sm:pt-24">
-        <span class="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/5 px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-cyan-200">
-          <span class="relative flex h-1.5 w-1.5">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-60"></span>
-            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-300"></span>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-14 px-4 pb-16 pt-14 sm:px-6 sm:pb-24 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+
+        <div class="text-center lg:text-left">
+          <span class="inline-flex items-center gap-2 rounded-full border border-indigo-200/80 bg-white/80 px-3.5 py-1.5 text-[11px] font-semibold text-indigo-700 shadow-sm">
+            <span class="grid h-4 w-4 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-white">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="h-2.5 w-2.5" aria-hidden="true">
+                <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-linecap="round" />
+              </svg>
+            </span>
+            Fresh light theme · Open source · MIT
           </span>
-          Open source · MIT licensed · One HTML file
-        </span>
 
-        <h1 class="mx-auto mt-6 max-w-4xl text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
-          One calculator.<br class="hidden sm:block" />
-          <span class="bg-gradient-to-r from-cyan-300 via-sky-400 to-indigo-400 bg-clip-text text-transparent">Every answer.</span>
-        </h1>
+          <h1 class="mt-6 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-6xl lg:text-[4.4rem] lg:leading-[1.02]">
+            One calculator.<br />
+            <span class="bg-gradient-to-r from-indigo-600 via-sky-500 to-cyan-500 bg-clip-text text-transparent">Every answer.</span>
+          </h1>
 
-        <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
-          A beautifully simple standard calculator with a complete scientific toolkit — trigonometry,
-          powers, roots, logarithms, factorials, memory and history. Fast, accurate and at home on every screen.
-        </p>
-        <p class="mt-2 text-sm text-slate-500">हर गणना, एक ही जगह — सटीक, तेज़ और हर स्क्रीन के लिए।</p>
-
-        <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href="#calculator"
-             class="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-300 to-indigo-400 px-6 py-3 text-sm font-bold text-[#04101a] shadow-lg shadow-cyan-500/20 transition hover:brightness-110 sm:w-auto">
-            Start calculating
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </a>
-          <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator" target="_blank" rel="noopener noreferrer"
-             class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:bg-white/[0.07] sm:w-auto">
-            <svg viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" aria-hidden="true">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-            </svg>
-            View source
-          </a>
-        </div>
-
-        <dl class="mx-auto mt-12 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-          <div class="glass rounded-2xl px-4 py-3">
-            <dt class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Modes</dt>
-            <dd class="mt-1 font-mono text-lg font-semibold text-white">2</dd>
-          </div>
-          <div class="glass rounded-2xl px-4 py-3">
-            <dt class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Functions</dt>
-            <dd class="mt-1 font-mono text-lg font-semibold text-white">30+</dd>
-          </div>
-          <div class="glass rounded-2xl px-4 py-3">
-            <dt class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Responsive</dt>
-            <dd class="mt-1 font-mono text-lg font-semibold text-white">100%</dd>
-          </div>
-          <div class="glass rounded-2xl px-4 py-3">
-            <dt class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Files</dt>
-            <dd class="mt-1 font-mono text-lg font-semibold text-white">1</dd>
-          </div>
-        </dl>
-      </div>
-    </section>
-
-    <!-- ================= CALCULATOR ================= -->
-    <section id="calculator" class="relative scroll-mt-24 py-14 sm:py-20">
-      <div class="mx-auto max-w-5xl px-4 sm:px-6">
-        <div class="mb-8 text-center">
-          <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-400">The calculator</p>
-          <h2 class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Built for daily math and serious science.</h2>
-          <p class="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
-            Switch modes, choose your angle unit and start typing. Every result is calculated locally in your browser — nothing is sent anywhere.
+          <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg lg:mx-0">
+            A beautifully simple standard calculator with a complete scientific workspace — trigonometry,
+            powers, roots, logarithms, memory and history. Fast, accurate and at home on every screen.
           </p>
-        </div>
+          <p class="mt-2 text-sm text-slate-500">हल्का डिज़ाइन, पूरा scientific calculator — हर गणना एक ही जगह।</p>
 
-        <div class="mx-auto grid max-w-4xl gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
-
-          <!-- Calculator card -->
-          <div class="glass rounded-[1.75rem] p-3 shadow-2xl shadow-black/50 sm:p-5">
-            <div class="flex items-center justify-between gap-2 px-0.5 pb-3">
-              <div class="flex rounded-xl bg-black/30 p-1" role="tablist" aria-label="Calculator mode">
-                <button id="tab-standard" type="button" role="tab" aria-selected="false" aria-controls="scientificPanel" class="tab-btn" data-mode="standard">Standard</button>
-                <button id="tab-scientific" type="button" role="tab" aria-selected="true" aria-controls="scientificPanel" class="tab-btn is-active" data-mode="scientific">Scientific</button>
-              </div>
-              <div id="angleWrap" class="flex rounded-lg bg-black/30 p-1" role="group" aria-label="Angle unit">
-                <button type="button" data-angle="DEG" class="angle-btn is-active" aria-pressed="true">DEG</button>
-                <button type="button" data-angle="RAD" class="angle-btn" aria-pressed="false">RAD</button>
-              </div>
-            </div>
-
-            <!-- Display -->
-            <div id="displayPanel" class="rounded-2xl border border-white/5 bg-[#060a12] px-4 pb-2.5 pt-3 shadow-inner shadow-black/40">
-              <div class="flex items-center justify-between gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-slate-500">
-                <span id="displayMode">Scientific</span>
-                <span class="flex items-center gap-1.5">
-                  <span id="memoryBadge" class="hidden rounded-md bg-amber-400/15 px-1.5 py-0.5 text-[9px] tracking-normal text-amber-300" title="Value stored in memory">M</span>
-                  <span id="angleBadge" class="rounded-md bg-white/5 px-1.5 py-0.5 tracking-normal text-slate-400">DEG</span>
-                </span>
-              </div>
-              <div id="exprDisplay" class="no-scrollbar mt-2 overflow-x-auto whitespace-nowrap text-right font-mono text-[13px] text-slate-500" aria-hidden="true">0</div>
-              <div id="resultDisplay" class="no-scrollbar mt-1 overflow-x-auto whitespace-nowrap text-right font-mono text-[1.9rem] font-semibold leading-tight text-white sm:text-[2.35rem]" title="Click to copy the result">0</div>
-              <div id="errorText" class="mt-0.5 min-h-[1rem] text-right text-[11px] text-rose-300" role="alert"></div>
-              <span id="liveResult" class="sr-only" aria-live="polite"></span>
-            </div>
-
-            <!-- Memory -->
-            <div class="mt-2 grid grid-cols-5 gap-1" role="group" aria-label="Memory controls">
-              <button type="button" class="key key-mem" data-memory="mc" aria-label="Memory clear">MC</button>
-              <button type="button" class="key key-mem" data-memory="mr" aria-label="Memory recall">MR</button>
-              <button type="button" class="key key-mem" data-memory="m+" aria-label="Add to memory">M+</button>
-              <button type="button" class="key key-mem" data-memory="m-" aria-label="Subtract from memory">M−</button>
-              <button type="button" class="key key-mem" data-memory="ms" aria-label="Store in memory">MS</button>
-            </div>
-
-            <!-- Scientific keypad -->
-            <div id="scientificPanel" class="mt-1.5 grid grid-cols-6 gap-1 sm:gap-1.5" role="group" aria-label="Scientific functions">
-              <button type="button" class="key key-sci key-sci-fn" data-insert="sin(" aria-label="Sine">sin</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="cos(" aria-label="Cosine">cos</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="tan(" aria-label="Tangent">tan</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="ln(" aria-label="Natural logarithm">ln</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="log(" aria-label="Logarithm base 10">log</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="√(" aria-label="Square root">√</button>
-
-              <button type="button" class="key key-sci key-sci-fn" data-insert="asin(" aria-label="Inverse sine">sin⁻¹</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="acos(" aria-label="Inverse cosine">cos⁻¹</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="atan(" aria-label="Inverse tangent">tan⁻¹</button>
-              <button type="button" class="key key-sci" data-insert="^2" aria-label="Square">x²</button>
-              <button type="button" class="key key-sci" data-insert="^" aria-label="Power">xʸ</button>
-              <button type="button" class="key key-sci" data-insert="!" aria-label="Factorial">x!</button>
-
-              <button type="button" class="key key-sci key-fn" data-insert="(" aria-label="Open parenthesis">(</button>
-              <button type="button" class="key key-sci key-fn" data-insert=")" aria-label="Close parenthesis">)</button>
-              <button type="button" class="key key-sci key-const" data-insert="π" aria-label="Pi">π</button>
-              <button type="button" class="key key-sci key-const" data-insert="e" aria-label="Euler's number">e</button>
-              <button type="button" class="key key-sci" data-action="reciprocal" aria-label="Reciprocal, one over x">1/x</button>
-              <button type="button" class="key key-sci" data-insert="abs(" aria-label="Absolute value">|x|</button>
-
-              <button type="button" class="key key-sci" data-insert="10^" aria-label="Ten to the power of x">10ˣ</button>
-              <button type="button" class="key key-sci" data-insert="e^" aria-label="e to the power of x">eˣ</button>
-              <button type="button" class="key key-sci key-sci-fn" data-insert="cbrt(" aria-label="Cube root">∛</button>
-              <button type="button" class="key key-sci" data-insert="E" aria-label="Exponent">EXP</button>
-              <button type="button" class="key key-sci key-const" data-insert="ans" aria-label="Previous answer">Ans</button>
-              <button type="button" class="key key-sci" data-insert="%" aria-label="Percent">%</button>
-            </div>
-
-            <!-- Main keypad -->
-            <div class="mt-1.5 grid grid-cols-4 gap-1.5 sm:gap-2" role="group" aria-label="Number pad">
-              <button type="button" class="key key-danger" data-action="clear" aria-label="All clear">AC</button>
-              <button type="button" class="key key-fn" data-action="backspace" aria-label="Delete last character">DEL</button>
-              <button type="button" class="key key-fn" data-insert="%" aria-label="Percent">%</button>
-              <button type="button" class="key key-op" data-insert="÷" aria-label="Divide">÷</button>
-
-              <button type="button" class="key key-fn" data-insert="(" aria-label="Open parenthesis">(</button>
-              <button type="button" class="key key-fn" data-insert=")" aria-label="Close parenthesis">)</button>
-              <button type="button" class="key key-fn" data-insert="^" aria-label="Power">xʸ</button>
-              <button type="button" class="key key-op" data-insert="×" aria-label="Multiply">×</button>
-
-              <button type="button" class="key key-num" data-insert="7">7</button>
-              <button type="button" class="key key-num" data-insert="8">8</button>
-              <button type="button" class="key key-num" data-insert="9">9</button>
-              <button type="button" class="key key-op" data-insert="−" aria-label="Subtract">−</button>
-
-              <button type="button" class="key key-num" data-insert="4">4</button>
-              <button type="button" class="key key-num" data-insert="5">5</button>
-              <button type="button" class="key key-num" data-insert="6">6</button>
-              <button type="button" class="key key-op" data-insert="+" aria-label="Add">+</button>
-
-              <button type="button" class="key key-num" data-insert="1">1</button>
-              <button type="button" class="key key-num" data-insert="2">2</button>
-              <button type="button" class="key key-num" data-insert="3">3</button>
-              <button type="button" class="key key-equals row-span-2" data-action="equals" aria-label="Equals">=</button>
-
-              <button type="button" class="key key-fn" data-action="negate" aria-label="Toggle sign">±</button>
-              <button type="button" class="key key-num" data-insert="0">0</button>
-              <button type="button" class="key key-num" data-insert="." aria-label="Decimal point">.</button>
-            </div>
-
-            <p class="mt-3 px-1 text-center text-[10px] leading-relaxed text-slate-600">
-              Tip: use your keyboard too — <span class="text-slate-500">Enter</span> to solve, <span class="text-slate-500">Esc</span> to clear, <span class="text-slate-500">↑</span> for history.
-            </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+            <a href="calculator.html"
+               class="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-500 sm:w-auto">
+              Open the calculator
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+            <a href="#features" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 sm:w-auto">
+              See what's inside
+            </a>
           </div>
 
-          <!-- Side panel -->
-          <aside class="space-y-4">
-            <div class="glass rounded-2xl p-4">
-              <div class="flex items-center justify-between">
-                <h3 class="flex items-center gap-2 text-sm font-semibold text-white">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-4 w-4 text-cyan-300" aria-hidden="true">
-                    <path d="M3 12a9 9 0 109-9 9 9 0 00-9 9z" stroke-linecap="round" />
-                    <path d="M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                  History
-                </h3>
-                <button id="clearHistory" type="button" class="text-[11px] font-medium text-slate-500 transition hover:text-rose-300">Clear</button>
+          <dl class="mx-auto mt-10 grid max-w-md grid-cols-2 gap-3 sm:grid-cols-4 lg:mx-0 lg:max-w-xl">
+            <div class="rounded-2xl border border-slate-200/80 bg-white/80 px-3 py-3 text-left shadow-sm">
+              <dt class="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Modes</dt>
+              <dd class="mt-1 font-mono text-lg font-semibold text-slate-900">2</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200/80 bg-white/80 px-3 py-3 text-left shadow-sm">
+              <dt class="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Functions</dt>
+              <dd class="mt-1 font-mono text-lg font-semibold text-slate-900">30+</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200/80 bg-white/80 px-3 py-3 text-left shadow-sm">
+              <dt class="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Local</dt>
+              <dd class="mt-1 font-mono text-lg font-semibold text-slate-900">100%</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200/80 bg-white/80 px-3 py-3 text-left shadow-sm">
+              <dt class="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Sign-ups</dt>
+              <dd class="mt-1 font-mono text-lg font-semibold text-slate-900">0</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Static calculator preview -->
+        <div class="relative mx-auto w-full max-w-[390px] lg:max-w-none" aria-hidden="true">
+          <div class="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-tr from-indigo-200/70 via-sky-100/80 to-cyan-100/70 blur-2xl"></div>
+
+          <div class="relative rotate-1 rounded-[1.75rem] border border-white/90 bg-white p-4 shadow-lift transition duration-300 hover:rotate-0 sm:p-5">
+            <div class="flex items-center justify-between">
+              <div class="flex rounded-lg bg-slate-100 p-0.5 text-[10px] font-semibold">
+                <span class="rounded-md px-2 py-1 text-slate-400">Standard</span>
+                <span class="rounded-md bg-white px-2 py-1 text-slate-900 shadow-sm">Scientific</span>
               </div>
-              <div id="historyList" class="thin-scroll mt-3 max-h-64 space-y-1 overflow-y-auto pr-1">
-                <p class="px-1 py-2 text-xs leading-relaxed text-slate-500">No calculations yet. Your history will appear here.</p>
-              </div>
+              <span class="rounded-md border border-slate-200 bg-white px-2 py-1 font-mono text-[10px] text-slate-500">DEG</span>
             </div>
 
-            <div class="glass rounded-2xl p-4">
-              <h3 class="text-sm font-semibold text-white">Quick tips</h3>
-              <ul class="mt-2.5 space-y-2 text-xs leading-relaxed text-slate-400">
-                <li class="flex gap-2"><span class="text-cyan-400">→</span><span>Use <code class="font-mono text-slate-300">log(2, 8)</code> for a logarithm with base 2.</span></li>
-                <li class="flex gap-2"><span class="text-cyan-400">→</span><span>Implicit multiplication works: <code class="font-mono text-slate-300">2π</code>, <code class="font-mono text-slate-300">3(4+1)</code>, <code class="font-mono text-slate-300">2sin(30)</code>.</span></li>
-                <li class="flex gap-2"><span class="text-cyan-400">→</span><span>Percent is mathematical: <code class="font-mono text-slate-300">50+10%</code> → <code class="font-mono text-slate-300">55</code>.</span></li>
-                <li class="flex gap-2"><span class="text-cyan-400">→</span><span>DEG/RAD affects trigonometric functions only.</span></li>
-              </ul>
+            <div class="mt-3 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-indigo-50/50 p-3 text-right">
+              <div class="font-mono text-[10px] text-slate-400">sin(30) + log(2, 8)</div>
+              <div class="mt-1 font-mono text-3xl font-semibold text-slate-900">3.5</div>
             </div>
 
-            <div class="rounded-2xl border border-cyan-400/15 bg-cyan-400/[0.04] p-4">
-              <p class="text-xs font-semibold text-cyan-200">100% local &amp; private</p>
-              <p class="mt-1 text-[11px] leading-relaxed text-slate-400">Calculations never leave your device. History and memory are saved only in this browser.</p>
+            <div class="mt-3 grid grid-cols-6 gap-1">
+              <span class="mock-key mock-key-fn">sin</span>
+              <span class="mock-key mock-key-fn">cos</span>
+              <span class="mock-key mock-key-fn">tan</span>
+              <span class="mock-key mock-key-fn">ln</span>
+              <span class="mock-key mock-key-fn">log</span>
+              <span class="mock-key mock-key-fn">√</span>
+              <span class="mock-key">(</span>
+              <span class="mock-key">)</span>
+              <span class="mock-key">π</span>
+              <span class="mock-key">e</span>
+              <span class="mock-key">x²</span>
+              <span class="mock-key">x!</span>
             </div>
-          </aside>
+
+            <div class="mt-1 grid grid-cols-4 gap-1">
+              <span class="mock-key mock-key-danger">AC</span>
+              <span class="mock-key mock-key-op">DEL</span>
+              <span class="mock-key mock-key-op">%</span>
+              <span class="mock-key mock-key-op">÷</span>
+              <span class="mock-key">7</span>
+              <span class="mock-key">8</span>
+              <span class="mock-key">9</span>
+              <span class="mock-key mock-key-op">×</span>
+              <span class="mock-key">4</span>
+              <span class="mock-key">5</span>
+              <span class="mock-key">6</span>
+              <span class="mock-key mock-key-op">−</span>
+              <span class="mock-key">1</span>
+              <span class="mock-key">2</span>
+              <span class="mock-key">3</span>
+              <span class="mock-key mock-key-op">+</span>
+              <span class="mock-key">±</span>
+              <span class="mock-key">0</span>
+              <span class="mock-key">.</span>
+              <span class="mock-key mock-key-equals">=</span>
+            </div>
+          </div>
+
+          <div class="absolute -left-4 top-24 hidden items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-lg sm:flex lg:-left-8">
+            <span class="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 text-emerald-600">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true">
+                <path d="M12 3l7 3v5c0 4.5-2.8 7.7-7 9-4.2-1.3-7-4.5-7-9V6l7-3z" stroke-linejoin="round" /><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span>
+              <span class="block text-[10px] font-semibold text-slate-800">100% local</span>
+              <span class="block text-[9px] text-slate-400">Nothing leaves your browser</span>
+            </span>
+          </div>
+
+          <div class="absolute -right-3 bottom-16 hidden items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-lg sm:flex lg:-right-6">
+            <span class="font-mono text-[11px] font-semibold text-indigo-600">DEG</span>
+            <span class="h-3 w-px bg-slate-200"></span>
+            <span class="font-mono text-[11px] font-semibold text-cyan-600">RAD</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative border-y border-slate-200/70 bg-white/60 backdrop-blur">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-2 px-4 py-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 sm:px-6">
+          <span>HTML5</span>
+          <span class="text-slate-200">•</span>
+          <span>Tailwind CSS</span>
+          <span class="text-slate-200">•</span>
+          <span>Vanilla JavaScript</span>
+          <span class="text-slate-200">•</span>
+          <span>No build step</span>
+          <span class="text-slate-200">•</span>
+          <span>No tracking</span>
         </div>
       </div>
     </section>
 
     <!-- ================= FEATURES ================= -->
-    <section id="features" class="relative scroll-mt-24 border-t border-white/5 py-16 sm:py-24">
+    <section id="features" class="relative scroll-mt-24 py-16 sm:py-24">
       <div class="mx-auto max-w-6xl px-4 sm:px-6">
         <div class="max-w-2xl">
-          <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-400">Features</p>
-          <h2 class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Everything you need. Nothing you don't.</h2>
-          <p class="mt-3 text-sm leading-relaxed text-slate-400 sm:text-base">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-600">Features</p>
+          <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Everything you need. Nothing you don't.</h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-500 sm:text-base">
             A focused interface backed by a real expression parser — designed to feel instant and behave correctly.
           </p>
         </div>
 
         <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <article class="glass group rounded-2xl p-5 transition hover:border-white/15">
-            <span class="grid h-10 w-10 place-items-center rounded-xl bg-cyan-400/10 text-cyan-300">
+          <article class="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-soft">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
                 <rect x="4" y="2.5" width="16" height="19" rx="3" /><path d="M8 6.5h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18.5h8" stroke-linecap="round" />
               </svg>
             </span>
-            <h3 class="mt-4 text-base font-semibold text-white">Two calculators, one app</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400">Flip between a clean everyday keypad and a full scientific workspace without losing your place.</p>
+            <h3 class="mt-4 text-base font-semibold text-slate-900">Two modes, one page</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500">Everyday arithmetic or a full scientific workspace. Switch modes without losing your expression.</p>
           </article>
 
-          <article class="glass group rounded-2xl p-5 transition hover:border-white/15">
-            <span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-400/10 text-indigo-300">
+          <article class="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-soft">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-sky-50 text-sky-600">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
                 <path d="M18 4H7l6 8-6 8h11" stroke-linecap="round" stroke-linejoin="round" /><path d="M20 4v16" stroke-linecap="round" />
               </svg>
             </span>
-            <h3 class="mt-4 text-base font-semibold text-white">Complete function set</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400">Sin, cos, tan and inverses, powers, square and cube roots, natural and base-10 logs, factorial, π, e, abs and more.</p>
+            <h3 class="mt-4 text-base font-semibold text-slate-900">The full scientific suite</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500">Trig and inverse trig, powers, square and cube roots, logs, factorials, π, e, Ans and more.</p>
           </article>
 
-          <article class="glass group rounded-2xl p-5 transition hover:border-white/15">
-            <span class="grid h-10 w-10 place-items-center rounded-xl bg-emerald-400/10 text-emerald-300">
+          <article class="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-soft">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-600">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
                 <path d="M12 3l7 3v5c0 4.5-2.8 7.7-7 9-4.2-1.3-7-4.5-7-9V6l7-3z" stroke-linejoin="round" /><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </span>
-            <h3 class="mt-4 text-base font-semibold text-white">Accurate by design</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400">A purpose-built parser respects operator precedence, parentheses and percentages — and never uses <code class="font-mono text-slate-300">eval()</code>.</p>
+            <h3 class="mt-4 text-base font-semibold text-slate-900">A real math engine</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500">Correct precedence, parentheses, implicit multiplication and smart percentages — with no <code class="font-mono text-slate-700">eval()</code>.</p>
           </article>
 
-          <article class="glass group rounded-2xl p-5 transition hover:border-white/15">
-            <span class="grid h-10 w-10 place-items-center rounded-xl bg-amber-400/10 text-amber-300">
+          <article class="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-soft">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-amber-50 text-amber-600">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
                 <rect x="3" y="6" width="18" height="12" rx="2.5" /><path d="M7 10h10M7 14h4" stroke-linecap="round" />
               </svg>
             </span>
-            <h3 class="mt-4 text-base font-semibold text-white">Memory &amp; history</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400">Store with MS, adjust with M+/M−, recall with MR, and click any past calculation to load it again.</p>
+            <h3 class="mt-4 text-base font-semibold text-slate-900">Memory &amp; history</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500">MS, M+, M−, MR and MC, plus a 50-entry history you can click to reuse in one tap.</p>
           </article>
 
-          <article class="glass group rounded-2xl p-5 transition hover:border-white/15">
-            <span class="grid h-10 w-10 place-items-center rounded-xl bg-sky-400/10 text-sky-300">
+          <article class="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-soft">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-violet-50 text-violet-600">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
                 <rect x="2.5" y="6" width="19" height="12" rx="2.5" /><path d="M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M7 13.5h10" stroke-linecap="round" />
               </svg>
             </span>
-            <h3 class="mt-4 text-base font-semibold text-white">Keyboard ready</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400">Type numbers and operators, press Enter to solve, Backspace to fix a typo, Esc to clear, ↑ to recall.</p>
+            <h3 class="mt-4 text-base font-semibold text-slate-900">Keyboard-first</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500">Type, solve, fix and recall without reaching for the mouse. Enter, Backspace, Esc and ↑.</p>
           </article>
 
-          <article class="glass group rounded-2xl p-5 transition hover:border-white/15">
-            <span class="grid h-10 w-10 place-items-center rounded-xl bg-violet-400/10 text-violet-300">
+          <article class="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-soft">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-rose-50 text-rose-500">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
-                <path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z" stroke-linejoin="round" /><path d="M14 3v5h5M9 13l-2 2 2 2M15 13l2 2-2 2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12 3l7 3v5c0 4.5-2.8 7.7-7 9-4.2-1.3-7-4.5-7-9V6l7-3z" stroke-linejoin="round" /><path d="M12 9v3M12 15h.01" stroke-linecap="round" />
               </svg>
             </span>
-            <h3 class="mt-4 text-base font-semibold text-white">One file, zero build</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-400">Copy <code class="font-mono text-slate-300">index.html</code> anywhere. Tailwind CSS and vanilla JS — no framework, no install, no build step.</p>
+            <h3 class="mt-4 text-base font-semibold text-slate-900">Light, fast &amp; private</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500">No accounts, no analytics, no server round trips. Everything stays in your browser.</p>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- ================= WORKSPACE SHOWCASE ================= -->
+    <section id="workspace" class="relative scroll-mt-24 overflow-hidden border-y border-slate-200/70 bg-white/50 py-16 sm:py-24">
+      <div class="blob -left-20 bottom-0 h-72 w-72 bg-indigo-100/80" aria-hidden="true"></div>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-600">The dedicated page</p>
+          <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">A workspace that gets out of the way.</h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-500 sm:text-base">
+            The calculator has its own focused page — no marketing noise, just the keypad, the display and the
+            tools you actually use. Open it once and it feels like a native app.
+          </p>
+
+          <ul class="mt-6 space-y-3">
+            <li class="flex items-start gap-3 text-sm text-slate-600">
+              <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-600">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="h-3 w-3" aria-hidden="true"><path d="M5 12l4 4L19 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              Live result preview as you type
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-600">
+              <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-600">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="h-3 w-3" aria-hidden="true"><path d="M5 12l4 4L19 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              DEG / RAD with inverse trigonometry
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-600">
+              <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-600">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="h-3 w-3" aria-hidden="true"><path d="M5 12l4 4L19 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              Persistent memory and a 50-entry history
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-600">
+              <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-600">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="h-3 w-3" aria-hidden="true"><path d="M5 12l4 4L19 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              Responsive from the smallest phone to a desktop
+            </li>
+          </ul>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="calculator.html" class="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-800">
+              Launch the calculator
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </a>
+            <a href="#guide" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+              Read the guide
+            </a>
+          </div>
+        </div>
+
+        <div class="relative" aria-hidden="true">
+          <div class="absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-indigo-100 via-sky-100 to-cyan-100 blur-2xl"></div>
+          <div class="relative rounded-3xl border border-slate-200/80 bg-white p-5 shadow-lift">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div class="flex items-center gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-rose-300"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-300"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
+              </div>
+              <span class="font-mono text-[10px] text-slate-400">calculator.html</span>
+            </div>
+
+            <div class="mt-4 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-indigo-50/50 p-4 text-right">
+              <p class="font-mono text-[10px] text-slate-400">(2 + 3) × 4 − √(144)</p>
+              <p class="mt-1 font-mono text-2xl font-semibold text-slate-900">8</p>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-semibold text-slate-800">Recent history</h3>
+                <span class="text-[10px] font-medium text-slate-400">Clear</span>
+              </div>
+              <div class="mt-2 divide-y divide-slate-100">
+                <div class="flex items-center justify-between py-2">
+                  <span class="font-mono text-[11px] text-slate-400">sin(30) + log(2, 8)</span>
+                  <span class="font-mono text-xs font-medium text-slate-700">3.5</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="font-mono text-[11px] text-slate-400">2^10</span>
+                  <span class="font-mono text-xs font-medium text-slate-700">1024</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="font-mono text-[11px] text-slate-400">5!</span>
+                  <span class="font-mono text-xs font-medium text-slate-700">120</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="font-mono text-[11px] text-slate-400">0.1 + 0.2</span>
+                  <span class="font-mono text-xs font-medium text-slate-700">0.3</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center gap-2">
+              <span class="rounded-md border border-indigo-100 bg-indigo-50 px-2 py-1 font-mono text-[10px] font-semibold text-indigo-600">DEG</span>
+              <span class="rounded-md border border-amber-100 bg-amber-50 px-2 py-1 font-mono text-[10px] font-semibold text-amber-700">M</span>
+              <span class="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 font-mono text-[10px] font-semibold text-slate-500">Scientific</span>
+              <span class="ml-auto inline-flex items-center gap-1 text-[10px] font-medium text-emerald-600">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Saved locally
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= GUIDE ================= -->
-    <section id="guide" class="relative scroll-mt-24 border-t border-white/5 py-16 sm:py-24">
+    <section id="guide" class="relative scroll-mt-24 py-16 sm:py-24">
       <div class="mx-auto max-w-6xl px-4 sm:px-6">
         <div class="max-w-2xl">
-          <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-400">Guide</p>
-          <h2 class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Small calculator. Big manual energy.</h2>
-          <p class="mt-3 text-sm leading-relaxed text-slate-400 sm:text-base">Everything is designed to be obvious — here are the details that make it powerful.</p>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-600">Guide</p>
+          <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Small calculator. Big manual energy.</h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-500 sm:text-base">The shortcuts and syntax worth knowing before you dive in.</p>
         </div>
 
         <div class="mt-10 grid gap-4 lg:grid-cols-3">
-          <div class="glass rounded-2xl p-5">
-            <h3 class="text-sm font-semibold text-white">How to use it</h3>
-            <ol class="mt-4 space-y-3 text-xs leading-relaxed text-slate-400">
-              <li class="flex gap-3"><span class="font-mono text-cyan-400">01</span><span>Pick <strong class="text-slate-200">Standard</strong> or <strong class="text-slate-200">Scientific</strong> at the top of the calculator.</span></li>
-              <li class="flex gap-3"><span class="font-mono text-cyan-400">02</span><span>Choose <strong class="text-slate-200">DEG</strong> or <strong class="text-slate-200">RAD</strong> before using trigonometry.</span></li>
-              <li class="flex gap-3"><span class="font-mono text-cyan-400">03</span><span>Build an expression with the keypad or your keyboard. Parentheses auto-close when you press equals.</span></li>
-              <li class="flex gap-3"><span class="font-mono text-cyan-400">04</span><span>Press <strong class="text-slate-200">=</strong>. The result is saved to history; click any history row to reuse it.</span></li>
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <h3 class="text-sm font-semibold text-slate-900">How to use it</h3>
+            <ol class="mt-4 space-y-3 text-xs leading-relaxed text-slate-500">
+              <li class="flex gap-3"><span class="font-mono text-indigo-500">01</span><span>Open the calculator page and choose <strong class="text-slate-700">Standard</strong> or <strong class="text-slate-700">Scientific</strong>.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-indigo-500">02</span><span>Pick <strong class="text-slate-700">DEG</strong> or <strong class="text-slate-700">RAD</strong> before using trigonometry.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-indigo-500">03</span><span>Build an expression with the keypad or keyboard. Parentheses auto-close when you press equals.</span></li>
+              <li class="flex gap-3"><span class="font-mono text-indigo-500">04</span><span>Press <strong class="text-slate-700">=</strong>. The result is saved to history; click any row to reuse it.</span></li>
             </ol>
           </div>
 
-          <div class="glass rounded-2xl p-5">
-            <h3 class="text-sm font-semibold text-white">Keyboard shortcuts</h3>
-            <dl class="mt-4 grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2.5 text-xs text-slate-400">
-              <dt><kbd>0–9</kbd> <kbd>.</kbd></dt><dd>Enter numbers</dd>
-              <dt><kbd>+</kbd> <kbd>−</kbd> <kbd>*</kbd> <kbd>/</kbd></dt><dd>Basic operators</dd>
-              <dt><kbd>^</kbd> <kbd>%</kbd> <kbd>!</kbd></dt><dd>Power, percent, factorial</dd>
-              <dt><kbd>Enter</kbd></dt><dd>Calculate the result</dd>
-              <dt><kbd>Backspace</kbd></dt><dd>Delete the last input</dd>
-              <dt><kbd>Esc</kbd></dt><dd>Clear everything</dd>
-              <dt><kbd>↑</kbd></dt><dd>Load the latest history item</dd>
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <h3 class="text-sm font-semibold text-slate-900">Keyboard shortcuts</h3>
+            <dl class="mt-4 grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2.5 text-xs text-slate-500">
+              <dt><kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">0–9</kbd> <kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">.</kbd></dt><dd>Enter numbers</dd>
+              <dt><kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">+</kbd> <kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">−</kbd> <kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">*</kbd> <kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">/</kbd></dt><dd>Basic operators</dd>
+              <dt><kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">^</kbd> <kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">%</kbd> <kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">!</kbd></dt><dd>Power, percent, factorial</dd>
+              <dt><kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">Enter</kbd></dt><dd>Calculate the result</dd>
+              <dt><kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">Backspace</kbd></dt><dd>Delete the last input</dd>
+              <dt><kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">Esc</kbd></dt><dd>Clear everything</dd>
+              <dt><kbd class="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">↑</kbd></dt><dd>Load the latest history item</dd>
             </dl>
           </div>
 
-          <div class="glass rounded-2xl p-5">
-            <h3 class="text-sm font-semibold text-white">Examples</h3>
-            <dl class="mt-4 space-y-2.5 text-xs text-slate-400">
-              <div class="flex items-center justify-between gap-2 border-b border-white/5 pb-2"><dt class="font-mono text-slate-300">sin(30) <span class="text-[10px] text-cyan-400">DEG</span></dt><dd class="font-mono text-slate-200">0.5</dd></div>
-              <div class="flex items-center justify-between gap-2 border-b border-white/5 pb-2"><dt class="font-mono text-slate-300">log(2, 8)</dt><dd class="font-mono text-slate-200">3</dd></div>
-              <div class="flex items-center justify-between gap-2 border-b border-white/5 pb-2"><dt class="font-mono text-slate-300">2^10</dt><dd class="font-mono text-slate-200">1024</dd></div>
-              <div class="flex items-center justify-between gap-2 border-b border-white/5 pb-2"><dt class="font-mono text-slate-300">√(144)</dt><dd class="font-mono text-slate-200">12</dd></div>
-              <div class="flex items-center justify-between gap-2 border-b border-white/5 pb-2"><dt class="font-mono text-slate-300">5!</dt><dd class="font-mono text-slate-200">120</dd></div>
-              <div class="flex items-center justify-between gap-2"><dt class="font-mono text-slate-300">ln(e)</dt><dd class="font-mono text-slate-200">1</dd></div>
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <h3 class="text-sm font-semibold text-slate-900">Examples</h3>
+            <dl class="mt-4 space-y-2.5 text-xs text-slate-500">
+              <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2"><dt class="font-mono text-slate-600">sin(30) <span class="text-[10px] text-indigo-500">DEG</span></dt><dd class="font-mono text-slate-800">0.5</dd></div>
+              <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2"><dt class="font-mono text-slate-600">log(2, 8)</dt><dd class="font-mono text-slate-800">3</dd></div>
+              <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2"><dt class="font-mono text-slate-600">2^10</dt><dd class="font-mono text-slate-800">1024</dd></div>
+              <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2"><dt class="font-mono text-slate-600">√(144)</dt><dd class="font-mono text-slate-800">12</dd></div>
+              <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2"><dt class="font-mono text-slate-600">5!</dt><dd class="font-mono text-slate-800">120</dd></div>
+              <div class="flex items-center justify-between gap-2"><dt class="font-mono text-slate-600">ln(e)</dt><dd class="font-mono text-slate-800">1</dd></div>
             </dl>
           </div>
         </div>
 
         <div class="mt-4 grid gap-4 sm:grid-cols-2">
-          <div class="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
-            <h3 class="text-sm font-semibold text-white">Supported syntax</h3>
-            <p class="mt-2 text-xs leading-relaxed text-slate-400">
-              <code class="font-mono text-slate-300">+ − × ÷ ^ ( ) ! %</code>,
-              <code class="font-mono text-slate-300">sin cos tan asin acos atan</code>,
-              <code class="font-mono text-slate-300">sinh cosh tanh</code>,
-              <code class="font-mono text-slate-300">ln log sqrt cbrt abs exp</code>,
-              <code class="font-mono text-slate-300">floor ceil round</code>,
-              <code class="font-mono text-slate-300">π e ans</code>, decimals and scientific
-              notation such as <code class="font-mono text-slate-300">1.5E3</code>. Modulo is available as
-              <code class="font-mono text-slate-300">mod</code>.
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-5">
+            <h3 class="text-sm font-semibold text-slate-900">Supported syntax</h3>
+            <p class="mt-2 text-xs leading-relaxed text-slate-500">
+              <code class="font-mono text-slate-700">+ − × ÷ ^ ( ) ! %</code>,
+              <code class="font-mono text-slate-700">sin cos tan asin acos atan</code>,
+              <code class="font-mono text-slate-700">sinh cosh tanh</code>,
+              <code class="font-mono text-slate-700">ln log sqrt cbrt abs exp</code>,
+              <code class="font-mono text-slate-700">floor ceil round</code>,
+              <code class="font-mono text-slate-700">π e ans</code>, decimals and scientific notation such as
+              <code class="font-mono text-slate-700">1.5E3</code>. Modulo is available as
+              <code class="font-mono text-slate-700">mod</code>.
             </p>
           </div>
-          <div class="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
-            <h3 class="text-sm font-semibold text-white">Understanding the modes</h3>
-            <p class="mt-2 text-xs leading-relaxed text-slate-400">
-              <strong class="text-slate-200">DEG</strong> measures angles in degrees (sin 30 = 0.5). <strong class="text-slate-200">RAD</strong>
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-5">
+            <h3 class="text-sm font-semibold text-slate-900">Understanding the modes</h3>
+            <p class="mt-2 text-xs leading-relaxed text-slate-500">
+              <strong class="text-slate-700">DEG</strong> measures angles in degrees (sin 30 = 0.5). <strong class="text-slate-700">RAD</strong>
               measures them in radians (sin π/2 = 1). Standard mode keeps the everyday keypad; your expression,
               memory and history carry over when you switch to Scientific. Everything is stored locally — clearing
               your browser data resets it.
@@ -633,26 +553,29 @@
     </section>
 
     <!-- ================= CTA ================= -->
-    <section class="relative py-16 sm:py-20">
+    <section class="relative pb-16 sm:pb-24">
       <div class="mx-auto max-w-5xl px-4 sm:px-6">
-        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-cyan-500/10 via-indigo-500/10 to-transparent px-6 py-10 text-center sm:px-12 sm:py-14">
-          <div class="blob -right-10 -top-20 h-64 w-64 bg-indigo-500/20" aria-hidden="true"></div>
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-sky-500 px-6 py-12 text-center shadow-lift sm:px-12 sm:py-16">
+          <div class="pointer-events-none absolute -right-10 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" aria-hidden="true"></div>
+          <div class="pointer-events-none absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl" aria-hidden="true"></div>
           <div class="relative">
-            <h2 class="text-2xl font-bold tracking-tight text-white sm:text-4xl">Clone it. Remix it. Ship it.</h2>
-            <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base">
-              CalcPro is free and open source under the MIT license. Use it as a standalone app, embed it in your
-              product, or learn from the parser underneath.
+            <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-200">Open source · MIT</p>
+            <h2 class="mt-3 text-2xl font-bold tracking-tight text-white sm:text-4xl">Open it. Clone it. Make it yours.</h2>
+            <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-indigo-100 sm:text-base">
+              CalcPro is free to use, adapt and ship. Start with the focused calculator page or take the whole
+              project and build something new on top of it.
             </p>
-            <div class="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <a href="calculator.html" class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-indigo-700 shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-50 sm:w-auto">
+                Open the calculator
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
               <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator" target="_blank" rel="noopener noreferrer"
-                 class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:bg-cyan-50 sm:w-auto">
+                 class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto">
                 <svg viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" aria-hidden="true">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                 </svg>
                 Star on GitHub
-              </a>
-              <a href="#guide" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/5 sm:w-auto">
-                Read the guide
               </a>
             </div>
           </div>
@@ -662,955 +585,26 @@
   </main>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="border-t border-white/5 py-10">
+  <footer class="border-t border-slate-200/80 bg-white/60 py-10">
     <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-4 sm:flex-row sm:px-6">
       <div class="flex items-center gap-2.5">
-        <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-cyan-300 to-indigo-500 text-[#06101c]">
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 text-white">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true">
             <rect x="5" y="2.5" width="14" height="19" rx="2.5" /><path d="M8.5 7h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h7" stroke-linecap="round" />
           </svg>
         </span>
-        <span class="text-sm font-semibold">Calc<span class="text-cyan-400">Pro</span></span>
-        <span class="text-xs text-slate-600">·</span>
+        <span class="text-sm font-semibold text-slate-900">Calc<span class="text-indigo-600">Pro</span></span>
+        <span class="text-xs text-slate-300">·</span>
         <span class="text-xs text-slate-500">MIT © 2026 Maryam Mumtaz</span>
       </div>
-      <div class="flex items-center gap-5 text-xs font-medium text-slate-400">
-        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator" target="_blank" rel="noopener noreferrer" class="transition hover:text-white">GitHub</a>
-        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="transition hover:text-white">Docs</a>
-        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="transition hover:text-white">License</a>
-        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/issues" target="_blank" rel="noopener noreferrer" class="transition hover:text-white">Issues</a>
+      <div class="flex items-center gap-5 text-xs font-medium text-slate-500">
+        <a href="calculator.html" class="transition hover:text-slate-900">Calculator</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator" target="_blank" rel="noopener noreferrer" class="transition hover:text-slate-900">GitHub</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="transition hover:text-slate-900">Docs</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="transition hover:text-slate-900">License</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/issues" target="_blank" rel="noopener noreferrer" class="transition hover:text-slate-900">Issues</a>
       </div>
     </div>
   </footer>
-
-  <!-- Toast -->
-  <div id="toast" class="pointer-events-none fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 translate-y-2 rounded-full border border-white/10 bg-slate-900/95 px-4 py-2 text-xs font-medium text-slate-100 opacity-0 shadow-2xl shadow-black/50 backdrop-blur transition duration-200" role="status" aria-live="polite"></div>
-
-  <noscript>
-    <div class="fixed inset-x-4 bottom-4 z-[70] rounded-xl border border-amber-400/30 bg-amber-950/90 p-4 text-center text-sm text-amber-100">
-      CalcPro needs JavaScript to calculate. Please enable it and reload the page.
-    </div>
-  </noscript>
-
-  <script>
-    /* ============================================================
-       CalcPro — single-file calculator
-       A small, dependency-free expression engine + UI controller.
-       No eval(), no new Function(), no external libraries.
-       ============================================================ */
-    (() => {
-      'use strict';
-
-      /* ----------------------------------------------------------
-         1. Math engine
-         ---------------------------------------------------------- */
-      class CalcError extends Error {}
-
-      const D2R = Math.PI / 180;
-      const R2D = 180 / Math.PI;
-
-      let angleMode = 'DEG';
-      let lastAns = 0;
-
-      const CONSTANTS = {
-        pi: () => Math.PI,
-        tau: () => Math.PI * 2,
-        e: () => Math.E,
-        ans: () => lastAns
-      };
-
-      const FUNCTION_ARITY = {
-        sin: [1], cos: [1], tan: [1],
-        asin: [1], acos: [1], atan: [1],
-        sinh: [1], cosh: [1], tanh: [1],
-        asinh: [1], acosh: [1], atanh: [1],
-        sqrt: [1], cbrt: [1], abs: [1], exp: [1],
-        ln: [1], log: [1, 2],
-        floor: [1], ceil: [1], round: [1], sign: [1]
-      };
-
-      function normalize(value) {
-        if (!Number.isFinite(value)) return value;
-        if (Object.is(value, -0) || value === 0) return 0;
-        const abs = Math.abs(value);
-        // Preserve very large / very small magnitudes; round everything else
-        // to 12 significant digits to avoid floating point noise (0.1 + 0.2).
-        if (abs >= 1e15 || abs < 1e-12) return value;
-        return Number(value.toPrecision(12));
-      }
-
-      function formatNumber(value) {
-        if (!Number.isFinite(value)) throw new CalcError('Result is not a finite number');
-        if (value === 0) return '0';
-        const abs = Math.abs(value);
-        if (abs >= 1e12 || abs < 1e-9) {
-          return value.toExponential(11)
-            .replace(/\.?0+e/, 'e')
-            .replace('e+', 'e');
-        }
-        return String(Number(value.toPrecision(12)));
-      }
-
-      function closeParentheses(source) {
-        let depth = 0;
-        for (const char of source) {
-          if (char === '(') depth += 1;
-          else if (char === ')') {
-            depth -= 1;
-            if (depth < 0) throw new CalcError('Unmatched ")"');
-          }
-        }
-        return source + ')'.repeat(depth);
-      }
-
-      function tokenize(input) {
-        // Display symbols are normalized to parser-friendly tokens.
-        const source = String(input)
-          .replace(/×/g, '*')
-          .replace(/÷/g, '/')
-          .replace(/−/g, '-')
-          .replace(/π/g, 'pi')
-          .replace(/√/g, 'sqrt')
-          .replace(/∛/g, 'cbrt');
-
-        const tokens = [];
-        let index = 0;
-
-        while (index < source.length) {
-          const char = source[index];
-
-          if (/\s/.test(char)) { index += 1; continue; }
-
-          if (/[0-9.]/.test(char)) {
-            const start = index;
-            let seenDot = false;
-
-            while (index < source.length && /[0-9.]/.test(source[index])) {
-              if (source[index] === '.') {
-                if (seenDot) break;
-                seenDot = true;
-              }
-              index += 1;
-            }
-
-            // Scientific notation: 1.5E3, 2e-4. Lowercase "e" is only treated
-            // as an exponent when it is followed by a valid number.
-            if (source[index] === 'E' || source[index] === 'e') {
-              let lookahead = index + 1;
-              if (source[lookahead] === '+' || source[lookahead] === '-') lookahead += 1;
-              if (/[0-9]/.test(source[lookahead] || '')) {
-                lookahead += 1;
-                while (/[0-9]/.test(source[lookahead] || '')) lookahead += 1;
-                index = lookahead;
-              }
-            }
-
-            const raw = source.slice(start, index);
-            const value = Number(raw);
-            if (!Number.isFinite(value)) throw new CalcError('Invalid number');
-            tokens.push({ type: 'number', value });
-            continue;
-          }
-
-          if (/[a-zA-Z]/.test(char)) {
-            const start = index;
-            while (index < source.length && /[a-zA-Z]/.test(source[index])) index += 1;
-            const word = source.slice(start, index).toLowerCase();
-            if (word === 'mod') tokens.push({ type: 'operator', value: 'mod' });
-            else tokens.push({ type: 'identifier', value: word });
-            continue;
-          }
-
-          if ('+-*/^!%'.includes(char)) {
-            tokens.push({ type: 'operator', value: char });
-            index += 1;
-            continue;
-          }
-
-          if (char === '(') { tokens.push({ type: 'lparen' }); index += 1; continue; }
-          if (char === ')') { tokens.push({ type: 'rparen' }); index += 1; continue; }
-          if (char === ',') { tokens.push({ type: 'comma' }); index += 1; continue; }
-
-          throw new CalcError('Unexpected "' + char + '"');
-        }
-
-        return tokens;
-      }
-
-      function parse(tokens) {
-        let position = 0;
-
-        const peek = () => tokens[position];
-        const consume = () => tokens[position++];
-
-        function expect(type, label) {
-          const token = peek();
-          if (!token || token.type !== type) throw new CalcError('Expected ' + label);
-          return consume();
-        }
-
-        function parseExpression() {
-          return parseAddSubtract();
-        }
-
-        function parseAddSubtract() {
-          let node = parseMultiplyDivide();
-          while (peek() && peek().type === 'operator' && (peek().value === '+' || peek().value === '-')) {
-            const operator = consume().value;
-            node = { type: 'binary', operator, left: node, right: parseMultiplyDivide() };
-          }
-          return node;
-        }
-
-        function parseMultiplyDivide() {
-          let node = parseUnary();
-
-          while (true) {
-            const token = peek();
-            if (!token) break;
-
-            if (token.type === 'operator' && (token.value === '*' || token.value === '/' || token.value === 'mod')) {
-              consume();
-              node = { type: 'binary', operator: token.value, left: node, right: parseUnary() };
-              continue;
-            }
-
-            // Implicit multiplication: 2π, 3(4+1), 2sin(30), (1+1)(2+2)
-            if (token.type === 'number' || token.type === 'identifier' || token.type === 'lparen') {
-              node = { type: 'binary', operator: '*', left: node, right: parseUnary() };
-              continue;
-            }
-
-            break;
-          }
-
-          return node;
-        }
-
-        function parseUnary() {
-          const token = peek();
-          if (token && token.type === 'operator' && (token.value === '+' || token.value === '-')) {
-            consume();
-            return { type: 'unary', operator: token.value, operand: parseUnary() };
-          }
-          return parsePower();
-        }
-
-        function parsePower() {
-          const base = parsePostfix();
-          const token = peek();
-          if (token && token.type === 'operator' && token.value === '^') {
-            consume();
-            return { type: 'binary', operator: '^', left: base, right: parseUnary() };
-          }
-          return base;
-        }
-
-        function parsePostfix() {
-          let node = parsePrimary();
-          while (peek() && peek().type === 'operator' && (peek().value === '!' || peek().value === '%')) {
-            const operator = consume().value;
-            node = { type: 'postfix', operator, operand: node };
-          }
-          return node;
-        }
-
-        function parsePrimary() {
-          const token = peek();
-          if (!token) throw new CalcError('Incomplete expression');
-
-          if (token.type === 'number') {
-            consume();
-            return { type: 'number', value: token.value };
-          }
-
-          if (token.type === 'lparen') {
-            consume();
-            const expression = parseExpression();
-            expect('rparen', '")"');
-            return expression;
-          }
-
-          if (token.type === 'identifier') {
-            consume();
-            const name = token.value;
-
-            if (peek() && peek().type === 'lparen') {
-              if (!Object.prototype.hasOwnProperty.call(FUNCTION_ARITY, name)) {
-                throw new CalcError('Unknown function "' + name + '"');
-              }
-              consume();
-              const args = [];
-              if (peek() && peek().type !== 'rparen') {
-                args.push(parseExpression());
-                while (peek() && peek().type === 'comma') {
-                  consume();
-                  args.push(parseExpression());
-                }
-              }
-              expect('rparen', '")"');
-              return { type: 'call', name, args };
-            }
-
-            if (Object.prototype.hasOwnProperty.call(CONSTANTS, name)) {
-              return { type: 'constant', name };
-            }
-            throw new CalcError('Unknown function "' + name + '"');
-          }
-
-          throw new CalcError('Incomplete expression');
-        }
-
-        const ast = parseExpression();
-        if (position < tokens.length) throw new CalcError('Unexpected input');
-        return ast;
-      }
-
-      function factorial(value) {
-        if (!Number.isInteger(value) || value < 0) throw new CalcError('Factorial needs a non-negative integer');
-        if (value > 170) throw new CalcError('Result is too large');
-        let result = 1;
-        for (let i = 2; i <= value; i += 1) result *= i;
-        return result;
-      }
-
-      function angular(value) {
-        return angleMode === 'DEG' ? value * D2R : value;
-      }
-
-      function fromAngular(value) {
-        return angleMode === 'DEG' ? value * R2D : value;
-      }
-
-      function requireArgs(name, args, count) {
-        if (args.length !== count) {
-          throw new CalcError(name + '() expects ' + count + ' argument' + (count === 1 ? '' : 's'));
-        }
-      }
-
-      function applyFunction(name, args) {
-        switch (name) {
-          case 'sin': {
-            requireArgs(name, args, 1);
-            const value = Math.sin(angular(args[0]));
-            return Math.abs(value) < 1e-12 ? 0 : value;
-          }
-          case 'cos': {
-            requireArgs(name, args, 1);
-            const value = Math.cos(angular(args[0]));
-            return Math.abs(value) < 1e-12 ? 0 : value;
-          }
-          case 'tan': {
-            requireArgs(name, args, 1);
-            const radians = angular(args[0]);
-            if (Math.abs(Math.cos(radians)) < 1e-12) throw new CalcError('tan is undefined at this angle');
-            return Math.tan(radians);
-          }
-          case 'asin': {
-            requireArgs(name, args, 1);
-            if (args[0] < -1 || args[0] > 1) throw new CalcError('asin() expects a value from -1 to 1');
-            return fromAngular(Math.asin(args[0]));
-          }
-          case 'acos': {
-            requireArgs(name, args, 1);
-            if (args[0] < -1 || args[0] > 1) throw new CalcError('acos() expects a value from -1 to 1');
-            return fromAngular(Math.acos(args[0]));
-          }
-          case 'atan': {
-            requireArgs(name, args, 1);
-            return fromAngular(Math.atan(args[0]));
-          }
-          case 'sinh': requireArgs(name, args, 1); return Math.sinh(args[0]);
-          case 'cosh': requireArgs(name, args, 1); return Math.cosh(args[0]);
-          case 'tanh': requireArgs(name, args, 1); return Math.tanh(args[0]);
-          case 'asinh': requireArgs(name, args, 1); return Math.asinh(args[0]);
-          case 'acosh': {
-            requireArgs(name, args, 1);
-            if (args[0] < 1) throw new CalcError('acosh() expects a value of at least 1');
-            return Math.acosh(args[0]);
-          }
-          case 'atanh': {
-            requireArgs(name, args, 1);
-            if (args[0] <= -1 || args[0] >= 1) throw new CalcError('atanh() expects a value between -1 and 1');
-            return Math.atanh(args[0]);
-          }
-          case 'sqrt': {
-            requireArgs(name, args, 1);
-            if (args[0] < 0) throw new CalcError('Square root of a negative number is undefined');
-            return Math.sqrt(args[0]);
-          }
-          case 'cbrt': requireArgs(name, args, 1); return Math.cbrt(args[0]);
-          case 'abs': requireArgs(name, args, 1); return Math.abs(args[0]);
-          case 'exp': requireArgs(name, args, 1); return Math.exp(args[0]);
-          case 'ln': {
-            requireArgs(name, args, 1);
-            if (args[0] <= 0) throw new CalcError('ln() expects a positive number');
-            return Math.log(args[0]);
-          }
-          case 'log': {
-            if (args.length === 1) {
-              if (args[0] <= 0) throw new CalcError('log() expects a positive number');
-              return Math.log10(args[0]);
-            }
-            if (args.length === 2) {
-              const [base, value] = args;
-              if (base <= 0 || base === 1) throw new CalcError('Log base must be positive and not equal to 1');
-              if (value <= 0) throw new CalcError('log() expects a positive number');
-              return Math.log(value) / Math.log(base);
-            }
-            throw new CalcError('log() expects 1 or 2 arguments');
-          }
-          case 'floor': requireArgs(name, args, 1); return Math.floor(args[0]);
-          case 'ceil': requireArgs(name, args, 1); return Math.ceil(args[0]);
-          case 'round': requireArgs(name, args, 1); return Math.round(args[0]);
-          case 'sign': requireArgs(name, args, 1); return Math.sign(args[0]);
-          default:
-            throw new CalcError('Unknown function "' + name + '"');
-        }
-      }
-
-      function evaluateNode(node) {
-        switch (node.type) {
-          case 'number':
-            return node.value;
-
-          case 'constant':
-            return CONSTANTS[node.name]();
-
-          case 'unary': {
-            const value = evaluateNode(node.operand);
-            return node.operator === '-' ? -value : value;
-          }
-
-          case 'postfix': {
-            const value = evaluateNode(node.operand);
-            if (node.operator === '!') return factorial(value);
-            return value / 100; // percent
-          }
-
-          case 'call':
-            return applyFunction(node.name, node.args.map(evaluateNode));
-
-          case 'binary': {
-            // Smart percentage: 50 + 10% = 55, 200 - 10% = 180.
-            if ((node.operator === '+' || node.operator === '-') &&
-                node.right.type === 'postfix' && node.right.operator === '%') {
-              const base = evaluateNode(node.left);
-              const percent = evaluateNode(node.right.operand);
-              const delta = base * percent / 100;
-              return node.operator === '+' ? base + delta : base - delta;
-            }
-
-            const left = evaluateNode(node.left);
-            const right = evaluateNode(node.right);
-
-            switch (node.operator) {
-              case '+': return left + right;
-              case '-': return left - right;
-              case '*': return left * right;
-              case '/':
-                if (right === 0) throw new CalcError('Division by zero');
-                return left / right;
-              case 'mod':
-                if (right === 0) throw new CalcError('Division by zero');
-                return left % right;
-              case '^': {
-                if (left === 0 && right < 0) throw new CalcError('Division by zero');
-                const result = Math.pow(left, right);
-                if (Number.isNaN(result)) throw new CalcError('Undefined result');
-                return result;
-              }
-              default:
-                throw new CalcError('Unknown operator');
-            }
-          }
-
-          default:
-            throw new CalcError('Invalid expression');
-        }
-      }
-
-      function evaluate(expression, options = {}) {
-        const shouldCommit = options.commit !== false;
-        let source = String(expression ?? '').trim();
-        if (!source) throw new CalcError('Enter an expression');
-
-        source = closeParentheses(source);
-        const tokens = tokenize(source);
-        if (!tokens.length) throw new CalcError('Enter an expression');
-
-        const ast = parse(tokens);
-        const result = normalize(evaluateNode(ast));
-
-        if (Number.isNaN(result)) throw new CalcError('Undefined result');
-        if (!Number.isFinite(result)) throw new CalcError('Result is too large');
-
-        if (shouldCommit) lastAns = result;
-        return result;
-      }
-
-      // Public, reusable engine API.
-      window.CalcPro = Object.freeze({
-        evaluate,
-        format: formatNumber,
-        normalize,
-        closeParentheses,
-        setAngleMode(mode) {
-          if (mode === 'DEG' || mode === 'RAD') angleMode = mode;
-        },
-        getAngleMode() {
-          return angleMode;
-        },
-        resetAnswer() {
-          lastAns = 0;
-        }
-      });
-
-      /* ----------------------------------------------------------
-         2. UI controller
-         ---------------------------------------------------------- */
-      const STORAGE_KEY = 'calcpro:v1';
-
-      const state = {
-        expression: '',
-        result: 0,
-        display: '0',
-        justEvaluated: false,
-        memory: 0,
-        mode: 'scientific',
-        angle: 'DEG',
-        history: []
-      };
-
-      const $ = (id) => document.getElementById(id);
-      const els = {
-        expr: $('exprDisplay'),
-        result: $('resultDisplay'),
-        error: $('errorText'),
-        live: $('liveResult'),
-        displayMode: $('displayMode'),
-        angleBadge: $('angleBadge'),
-        memoryBadge: $('memoryBadge'),
-        scientificPanel: $('scientificPanel'),
-        angleWrap: $('angleWrap'),
-        history: $('historyList'),
-        clearHistory: $('clearHistory'),
-        toast: $('toast')
-      };
-
-      function save() {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({
-            memory: state.memory,
-            history: state.history.slice(0, 50),
-            mode: state.mode,
-            angle: state.angle
-          }));
-        } catch (_) { /* storage may be unavailable */ }
-      }
-
-      function load() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return;
-          const saved = JSON.parse(raw);
-          if (!saved || typeof saved !== 'object') return;
-
-          if (Number.isFinite(saved.memory)) state.memory = saved.memory;
-          if (Array.isArray(saved.history)) {
-            state.history = saved.history
-              .filter((item) => item && typeof item.expr === 'string' && typeof item.result === 'string')
-              .slice(0, 50);
-          }
-          if (saved.mode === 'standard' || saved.mode === 'scientific') state.mode = saved.mode;
-          if (saved.angle === 'DEG' || saved.angle === 'RAD') state.angle = saved.angle;
-        } catch (_) { /* ignore corrupt storage */ }
-      }
-
-      let toastTimer = 0;
-      function toast(message) {
-        if (!els.toast) return;
-        els.toast.textContent = message;
-        els.toast.classList.remove('opacity-0', 'translate-y-2');
-        window.clearTimeout(toastTimer);
-        toastTimer = window.setTimeout(() => {
-          els.toast.classList.add('opacity-0', 'translate-y-2');
-        }, 1800);
-      }
-
-      function updateBadges() {
-        els.angleBadge.textContent = state.angle;
-        els.displayMode.textContent = state.mode === 'scientific' ? 'Scientific' : 'Standard';
-        els.memoryBadge.classList.toggle('hidden', state.memory === 0);
-        els.memoryBadge.title = 'Memory: ' + (() => {
-          try { return formatNumber(state.memory); } catch (_) { return '0'; }
-        })();
-      }
-
-      function refresh() {
-        els.expr.textContent = state.expression || '0';
-        els.expr.scrollLeft = els.expr.scrollWidth;
-        els.error.textContent = '';
-
-        if (state.justEvaluated) {
-          els.result.textContent = state.display;
-          els.result.classList.remove('text-slate-500');
-          els.result.scrollLeft = els.result.scrollWidth;
-          updateBadges();
-          return;
-        }
-
-        if (!state.expression.trim()) {
-          els.result.textContent = '0';
-          els.result.classList.add('text-slate-500');
-          updateBadges();
-          return;
-        }
-
-        try {
-          const preview = window.CalcPro.evaluate(state.expression, { commit: false });
-          els.result.textContent = formatNumber(preview);
-          els.result.classList.remove('text-slate-500');
-        } catch (_) {
-          els.result.textContent = '—';
-          els.result.classList.add('text-slate-500');
-        }
-        els.result.scrollLeft = els.result.scrollWidth;
-        updateBadges();
-      }
-
-      function insert(text) {
-        if (text === 'E') {
-          if (state.justEvaluated || !/[0-9]$/.test(state.expression)) return;
-        }
-
-        if (state.justEvaluated) {
-          // Continue from the result for operators (and "x²"), start fresh
-          // for values — including multi-character inserts such as "-5".
-          const continues = /^(?:[+\-×÷*/^!%]|\^[23])$/.test(text);
-          state.expression = continues ? String(state.result) : '';
-          state.justEvaluated = false;
-        }
-
-        if (text === '.') {
-          const trailing = state.expression.match(/[0-9.]*$/);
-          if (trailing && trailing[0].includes('.')) return;
-        }
-
-        state.expression += text;
-        refresh();
-        save();
-      }
-
-      function backspace() {
-        if (state.justEvaluated) { clearAll(); return; }
-        if (!state.expression) return;
-
-        const call = state.expression.match(/(?:asinh|acosh|atanh|asin|acos|atan|sinh|cosh|tanh|sin|cos|tan|sqrt|cbrt|abs|exp|floor|ceil|round|ln|log)\($/i);
-        state.expression = call
-          ? state.expression.slice(0, -call[0].length)
-          : state.expression.slice(0, -1);
-
-        refresh();
-        save();
-      }
-
-      function clearAll() {
-        state.expression = '';
-        state.result = 0;
-        state.display = '0';
-        state.justEvaluated = false;
-        els.error.textContent = '';
-        refresh();
-        save();
-      }
-
-      function renderHistory() {
-        els.history.textContent = '';
-
-        if (!state.history.length) {
-          const empty = document.createElement('p');
-          empty.className = 'px-1 py-2 text-xs leading-relaxed text-slate-500';
-          empty.textContent = 'No calculations yet. Your history will appear here.';
-          els.history.appendChild(empty);
-          return;
-        }
-
-        state.history.forEach((item, index) => {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'history-item';
-          button.title = 'Load this expression';
-
-          const expressionLine = document.createElement('span');
-          expressionLine.className = 'block truncate font-mono text-[11px] text-slate-500';
-          expressionLine.textContent = item.expr;
-
-          const resultLine = document.createElement('span');
-          resultLine.className = 'mt-0.5 block truncate font-mono text-sm text-slate-200';
-          resultLine.textContent = '= ' + item.result;
-
-          button.append(expressionLine, resultLine);
-          button.addEventListener('click', () => loadHistory(index));
-          els.history.appendChild(button);
-        });
-      }
-
-      function loadHistory(index) {
-        const item = state.history[index];
-        if (!item) return;
-        state.expression = item.expr;
-        state.justEvaluated = false;
-        refresh();
-        save();
-        toast('History loaded');
-        document.getElementById('calculator').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      function commit() {
-        if (!state.expression.trim()) return;
-
-        try {
-          const closed = window.CalcPro.closeParentheses(state.expression);
-          const value = window.CalcPro.evaluate(closed, { commit: true });
-          const display = formatNumber(value);
-
-          state.expression = closed;
-          state.result = value;
-          state.display = display;
-          state.justEvaluated = true;
-
-          const latest = state.history[0];
-          if (!latest || latest.expr !== closed || latest.result !== display) {
-            state.history.unshift({ expr: closed, result: display });
-            state.history = state.history.slice(0, 50);
-          }
-
-          els.error.textContent = '';
-          els.live.textContent = closed + ' equals ' + display;
-          refresh();
-          renderHistory();
-          save();
-        } catch (error) {
-          state.justEvaluated = false;
-          els.result.textContent = 'Error';
-          els.result.classList.remove('text-slate-500');
-          els.error.textContent = error instanceof CalcError ? error.message : 'Invalid expression';
-          els.live.textContent = 'Error: ' + els.error.textContent;
-          els.result.classList.remove('shake');
-          // Restart the animation if it is already running.
-          void els.result.offsetWidth;
-          els.result.classList.add('shake');
-          window.setTimeout(() => els.result.classList.remove('shake'), 450);
-        }
-      }
-
-      function negate() {
-        if (state.justEvaluated) {
-          state.expression = String(state.result);
-          state.justEvaluated = false;
-        }
-
-        const expression = state.expression.trim();
-        if (!expression) { insert('−'); return; }
-
-        if ((expression.startsWith('−(') || expression.startsWith('-(')) && expression.endsWith(')')) {
-          state.expression = expression.slice(2, -1);
-        } else if (expression.startsWith('−') || expression.startsWith('-')) {
-          state.expression = expression.slice(1);
-        } else {
-          state.expression = '−(' + expression + ')';
-        }
-
-        refresh();
-        save();
-      }
-
-      function reciprocal() {
-        if (state.justEvaluated) {
-          state.expression = String(state.result);
-          state.justEvaluated = false;
-        }
-
-        if (!state.expression.trim()) {
-          insert('1/(');
-          return;
-        }
-
-        state.expression = '1/(' + state.expression + ')';
-        refresh();
-        save();
-      }
-
-      function currentValue() {
-        if (state.justEvaluated) return state.result;
-        if (!state.expression.trim()) return 0;
-        try {
-          return window.CalcPro.evaluate(state.expression, { commit: false });
-        } catch (_) {
-          return null;
-        }
-      }
-
-      function memoryAction(action) {
-        if (action === 'mc') {
-          state.memory = 0;
-          toast('Memory cleared');
-        } else if (action === 'mr') {
-          insert(formatNumber(state.memory));
-          toast('Memory recalled');
-          return;
-        } else {
-          const value = currentValue();
-          if (value === null) { toast('Finish the expression first'); return; }
-
-          if (action === 'ms') { state.memory = value; toast('Stored in memory'); }
-          if (action === 'm+') { state.memory += value; toast('Added to memory'); }
-          if (action === 'm-') { state.memory -= value; toast('Subtracted from memory'); }
-        }
-
-        updateBadges();
-        save();
-      }
-
-      function setMode(mode) {
-        state.mode = mode === 'standard' ? 'standard' : 'scientific';
-        const scientific = state.mode === 'scientific';
-
-        els.scientificPanel.classList.toggle('hidden', !scientific);
-        els.angleWrap.classList.toggle('invisible', !scientific);
-        els.angleWrap.setAttribute('aria-hidden', String(!scientific));
-
-        document.querySelectorAll('[data-mode]').forEach((button) => {
-          const active = button.dataset.mode === state.mode;
-          button.classList.toggle('is-active', active);
-          button.setAttribute('aria-selected', String(active));
-        });
-
-        updateBadges();
-        save();
-      }
-
-      function setAngle(mode) {
-        state.angle = mode === 'RAD' ? 'RAD' : 'DEG';
-        window.CalcPro.setAngleMode(state.angle);
-
-        document.querySelectorAll('[data-angle]').forEach((button) => {
-          const active = button.dataset.angle === state.angle;
-          button.classList.toggle('is-active', active);
-          button.setAttribute('aria-pressed', String(active));
-        });
-
-        updateBadges();
-        refresh();
-        save();
-      }
-
-      function handleAction(action) {
-        switch (action) {
-          case 'clear': clearAll(); break;
-          case 'backspace': backspace(); break;
-          case 'equals': commit(); break;
-          case 'negate': negate(); break;
-          case 'reciprocal': reciprocal(); break;
-          default: break;
-        }
-      }
-
-      /* ----------------------------------------------------------
-         3. Event wiring
-         ---------------------------------------------------------- */
-      // Mouse clicks release focus so Enter keeps meaning "equals". Keyboard
-      // activation (event.detail === 0) keeps focus for accessibility.
-      function onClick(button, handler) {
-        button.addEventListener('click', (event) => {
-          handler();
-          if (event.detail > 0) button.blur();
-        });
-      }
-
-      document.querySelectorAll('[data-insert]').forEach((button) => {
-        onClick(button, () => insert(button.dataset.insert));
-      });
-
-      document.querySelectorAll('[data-action]').forEach((button) => {
-        onClick(button, () => handleAction(button.dataset.action));
-      });
-
-      document.querySelectorAll('[data-memory]').forEach((button) => {
-        onClick(button, () => memoryAction(button.dataset.memory));
-      });
-
-      document.querySelectorAll('[data-mode]').forEach((button) => {
-        onClick(button, () => setMode(button.dataset.mode));
-      });
-
-      document.querySelectorAll('[data-angle]').forEach((button) => {
-        onClick(button, () => setAngle(button.dataset.angle));
-      });
-
-      els.clearHistory.addEventListener('click', () => {
-        if (!state.history.length) return;
-        if (!window.confirm('Clear all calculation history?')) return;
-        state.history = [];
-        renderHistory();
-        save();
-        toast('History cleared');
-      });
-
-      els.result.addEventListener('click', async () => {
-        const text = state.justEvaluated ? state.display : els.result.textContent;
-        if (!text || text === '—' || text === 'Error') return;
-        try {
-          await navigator.clipboard.writeText(text);
-          toast('Result copied');
-        } catch (_) {
-          toast('Could not copy');
-        }
-      });
-
-      window.addEventListener('keydown', (event) => {
-        if (event.ctrlKey || event.metaKey || event.altKey) return;
-
-        const target = event.target;
-        if (target instanceof HTMLElement && target.matches('input, textarea, select, [contenteditable="true"]')) return;
-
-        // Let focused buttons handle Enter/Space natively.
-        if ((event.key === 'Enter' || event.key === ' ') &&
-            target instanceof Element && target.closest('button')) {
-          return;
-        }
-
-        const operatorMap = {
-          '*': '×', '/': '÷', '-': '−', '+': '+',
-          '^': '^', '%': '%', '(': '(', ')': ')', '!': '!', '.': '.'
-        };
-
-        if (/^[0-9]$/.test(event.key)) { insert(event.key); return; }
-        if (event.key === 'Enter' || event.key === '=') { event.preventDefault(); commit(); return; }
-        if (event.key === 'Backspace') { event.preventDefault(); backspace(); return; }
-        if (event.key === 'Escape' || event.key === 'Delete') { event.preventDefault(); clearAll(); return; }
-        if (event.key === 'ArrowUp') {
-          if (state.history.length) { event.preventDefault(); loadHistory(0); }
-          return;
-        }
-        if (operatorMap[event.key]) {
-          event.preventDefault();
-          insert(operatorMap[event.key]);
-        }
-      });
-
-      /* ----------------------------------------------------------
-         4. Boot
-         ---------------------------------------------------------- */
-      load();
-      window.CalcPro.setAngleMode(state.angle);
-      setMode(state.mode);
-      setAngle(state.angle);
-      renderHistory();
-      updateBadges();
-      refresh();
-    })();
-  </script>
 </body>
 </html>

@@ -166,4 +166,11 @@ The task is complete only when:
 3. Ask it to verify the acceptance tests before committing.
 4. Review the diff, then publish. For GitHub Pages: **Settings → Pages → Deploy from a branch → `main` → `/ (root)`**.
 
-The reference implementation of this prompt is this repository's [`index.html`](index.html).
+The original reference implementation of this prompt is a single `index.html`. This repository now ships the **two-page light variant**:
+
+- [`index.html`](index.html) — a light-themed landing page (hero, features, workspace showcase, guide, CTA).
+- [`calculator.html`](calculator.html) — the dedicated calculator page, still a self-contained single file with the full math engine and UI.
+
+If you want to reproduce the two-page version, add this to the prompt before building:
+
+> Split the deliverable into two self-contained pages: `index.html` for a light-themed landing page and `calculator.html` for the dedicated calculator. Do not share JavaScript or CSS files between them. The landing page must link prominently to the calculator page. Use the same light palette (soft white surfaces, slate typography, indigo/cyan accents) on both pages, and verify the calculator's acceptance tests on `calculator.html`.

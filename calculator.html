@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CalcPro — Calculator</title>
+  <meta name="description" content="A focused standard and scientific calculator with trigonometry, powers, roots, logarithms, memory and history. Fast, private and beautifully simple." />
+  <meta name="author" content="Maryam Mumtaz" />
+  <meta name="theme-color" content="#f6f7fb" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23ffffff'/%3E%3Cpath d='M18 21h28M18 32h28M18 43h12' stroke='%234f46e5' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+          },
+          colors: {
+            base: '#f6f7fb',
+            panel: '#ffffff'
+          },
+          boxShadow: {
+            soft: '0 24px 60px -36px rgba(15, 23, 42, 0.28)',
+            lift: '0 30px 80px -40px rgba(15, 23, 42, 0.38)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root { color-scheme: light; }
+    * { -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { background-color: #f6f7fb; }
+    ::selection { background: rgba(79, 70, 229, 0.18); color: #0f172a; }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(to right, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 0%, #000 45%, transparent 100%);
+      mask-image: radial-gradient(ellipse 72% 62% at 50% 0%, #000 45%, transparent 100%);
+    }
+
+    .key {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 3rem;
+      border-radius: 0.9rem;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #1e293b;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    }
+    .key:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .key:active { transform: translateY(1px) scale(0.985); }
+    .key:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; }
+
+    .key-num { font-size: 1.05rem; font-weight: 600; color: #0f172a; }
+    .key-fn { background: #f1f5f9; border-color: #e2e8f0; color: #475569; font-size: 0.9rem; }
+    .key-fn:hover { background: #e2e8f0; border-color: #cbd5e1; }
+    .key-op {
+      background: #eef2ff;
+      border-color: #e0e7ff;
+      color: #4338ca;
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+    .key-op:hover { background: #e0e7ff; border-color: #c7d2fe; }
+    .key-danger {
+      background: #fff1f2;
+      border-color: #ffe4e6;
+      color: #e11d48;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .key-danger:hover { background: #ffe4e6; border-color: #fecdd3; }
+    .key-equals {
+      height: auto;
+      min-height: 100%;
+      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+      border: none;
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 700;
+      box-shadow: 0 12px 28px -12px rgba(79, 70, 229, 0.55);
+    }
+    .key-equals:hover { filter: brightness(1.06); background: linear-gradient(135deg, #4f46e5, #0ea5e9); }
+
+    .key-sci {
+      height: 2.4rem;
+      border-radius: 0.75rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #475569;
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      box-shadow: none;
+    }
+    .key-sci:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .key-sci-fn {
+      background: #eef2ff;
+      border-color: #e0e7ff;
+      color: #4f46e5;
+    }
+    .key-sci-fn:hover { background: #e0e7ff; border-color: #c7d2fe; }
+    .key-const {
+      background: #ecfeff;
+      border-color: #cffafe;
+      color: #0e7490;
+    }
+    .key-const:hover { background: #cffafe; border-color: #a5f3fc; }
+    .key-mem {
+      height: 2rem;
+      border-radius: 0.6rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+    .key-mem:hover { background: #f1f5f9; color: #0f172a; border-color: transparent; }
+
+    .tab-btn {
+      padding: 0.45rem 0.85rem;
+      border-radius: 0.55rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #64748b;
+      transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: #0f172a; }
+    .tab-btn.is-active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12), 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+    .tab-btn:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; }
+
+    .angle-btn {
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.4rem;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      transition: all 0.15s ease;
+    }
+    .angle-btn:hover { color: #0f172a; }
+    .angle-btn.is-active { background: #ffffff; color: #4f46e5; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1); }
+    .angle-btn:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; }
+
+    .history-item {
+      display: block;
+      width: 100%;
+      text-align: right;
+      padding: 0.5rem 0.65rem;
+      border-radius: 0.7rem;
+      border: 1px solid transparent;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .history-item:hover { background: #f8fafc; border-color: #e2e8f0; }
+    .history-item:focus-visible { outline: 2px solid #6366f1; outline-offset: 1px; }
+
+    .no-scrollbar { scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .thin-scroll { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+    .thin-scroll::-webkit-scrollbar { width: 6px; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+
+    #resultDisplay { cursor: copy; color: #0f172a; transition: color 0.15s ease; }
+    #resultDisplay.is-muted { color: #94a3b8; }
+    #resultDisplay.is-error { color: #e11d48; }
+
+    .blob {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(90px);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-3px); }
+      40%, 60% { transform: translateX(3px); }
+    }
+    .shake { animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+
+    @media (min-width: 640px) {
+      .key { height: 3.4rem; }
+      .key-sci { height: 2.7rem; font-size: 0.78rem; }
+      .key-mem { height: 2.15rem; font-size: 0.68rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-base font-sans text-slate-900 antialiased">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl">
+    <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Calculator navigation">
+      <a href="index.html" class="flex items-center gap-2.5" aria-label="CalcPro home">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-white shadow-lg shadow-indigo-500/20">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5" aria-hidden="true">
+            <rect x="5" y="2.5" width="14" height="19" rx="2.5" />
+            <path d="M8.5 7h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h7" stroke-linecap="round" />
+          </svg>
+        </span>
+        <span class="text-lg font-bold tracking-tight text-slate-900">Calc<span class="text-indigo-600">Pro</span></span>
+      </a>
+
+      <div class="flex items-center gap-1 sm:gap-3">
+        <a href="index.html" class="rounded-lg px-2.5 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900">Home</a>
+        <a href="index.html#features" class="hidden rounded-lg px-2.5 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 sm:inline-flex">Features</a>
+        <a href="index.html#guide" class="hidden rounded-lg px-2.5 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 sm:inline-flex">Guide</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator" target="_blank" rel="noopener noreferrer"
+           class="ml-1 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+           aria-label="View source on GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ================= CALCULATOR ================= -->
+  <main id="calculator" class="relative overflow-hidden py-8 sm:py-12">
+    <div class="grid-bg absolute inset-0" aria-hidden="true"></div>
+    <div class="blob -left-24 top-0 h-72 w-72 bg-indigo-300/40" aria-hidden="true"></div>
+    <div class="blob -right-24 top-40 h-80 w-80 bg-cyan-200/50" aria-hidden="true"></div>
+
+    <div class="relative mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-600">Calculator workspace</p>
+          <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Standard &amp; scientific, together.</h1>
+          <p class="mt-2 max-w-xl text-sm leading-relaxed text-slate-500 sm:text-base">Switch modes, choose DEG or RAD, and let the live preview do the rest. Every result is calculated locally in your browser.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-[11px] font-medium">
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Runs locally
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-slate-500">Keyboard ready</span>
+        </div>
+      </div>
+
+      <div class="mx-auto grid max-w-4xl gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+
+        <!-- Calculator card -->
+        <div class="overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white shadow-lift">
+          <div class="h-1 bg-gradient-to-r from-indigo-500 via-sky-400 to-cyan-400"></div>
+          <div class="p-3 sm:p-5">
+
+            <div class="flex items-center justify-between gap-2 px-0.5 pb-3">
+              <div class="flex rounded-xl bg-slate-100 p-1" role="tablist" aria-label="Calculator mode">
+                <button id="tab-standard" type="button" role="tab" aria-selected="false" aria-controls="scientificPanel" class="tab-btn" data-mode="standard">Standard</button>
+                <button id="tab-scientific" type="button" role="tab" aria-selected="true" aria-controls="scientificPanel" class="tab-btn is-active" data-mode="scientific">Scientific</button>
+              </div>
+              <div id="angleWrap" class="flex rounded-lg bg-slate-100 p-1" role="group" aria-label="Angle unit">
+                <button type="button" data-angle="DEG" class="angle-btn is-active" aria-pressed="true">DEG</button>
+                <button type="button" data-angle="RAD" class="angle-btn" aria-pressed="false">RAD</button>
+              </div>
+            </div>
+
+            <!-- Display -->
+            <div id="displayPanel" class="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-indigo-50/40 px-4 pb-2.5 pt-3 shadow-inner shadow-slate-200/40">
+              <div class="flex items-center justify-between gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400">
+                <span id="displayMode">Scientific</span>
+                <span class="flex items-center gap-1.5">
+                  <span id="memoryBadge" class="hidden rounded-md border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-[9px] tracking-normal text-amber-700" title="Value stored in memory">M</span>
+                  <span id="angleBadge" class="rounded-md border border-slate-200 bg-white px-1.5 py-0.5 tracking-normal text-slate-500">DEG</span>
+                </span>
+              </div>
+              <div id="exprDisplay" class="no-scrollbar mt-2 overflow-x-auto whitespace-nowrap text-right font-mono text-[13px] text-slate-500" aria-hidden="true">0</div>
+              <div id="resultDisplay" class="no-scrollbar mt-1 overflow-x-auto whitespace-nowrap text-right font-mono text-[1.9rem] font-semibold leading-tight sm:text-[2.35rem]" title="Click to copy the result">0</div>
+              <div id="errorText" class="mt-0.5 min-h-[1rem] text-right text-[11px] text-rose-600" role="alert"></div>
+              <span id="liveResult" class="sr-only" aria-live="polite"></span>
+            </div>
+
+            <!-- Memory -->
+            <div class="mt-2 grid grid-cols-5 gap-1" role="group" aria-label="Memory controls">
+              <button type="button" class="key key-mem" data-memory="mc" aria-label="Memory clear">MC</button>
+              <button type="button" class="key key-mem" data-memory="mr" aria-label="Memory recall">MR</button>
+              <button type="button" class="key key-mem" data-memory="m+" aria-label="Add to memory">M+</button>
+              <button type="button" class="key key-mem" data-memory="m-" aria-label="Subtract from memory">M−</button>
+              <button type="button" class="key key-mem" data-memory="ms" aria-label="Store in memory">MS</button>
+            </div>
+
+            <!-- Scientific keypad -->
+            <div id="scientificPanel" class="mt-1.5 grid grid-cols-6 gap-1 sm:gap-1.5" role="group" aria-label="Scientific functions">
+              <button type="button" class="key key-sci key-sci-fn" data-insert="sin(" aria-label="Sine">sin</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="cos(" aria-label="Cosine">cos</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="tan(" aria-label="Tangent">tan</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="ln(" aria-label="Natural logarithm">ln</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="log(" aria-label="Logarithm base 10">log</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="√(" aria-label="Square root">√</button>
+
+              <button type="button" class="key key-sci key-sci-fn" data-insert="asin(" aria-label="Inverse sine">sin⁻¹</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="acos(" aria-label="Inverse cosine">cos⁻¹</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="atan(" aria-label="Inverse tangent">tan⁻¹</button>
+              <button type="button" class="key key-sci" data-insert="^2" aria-label="Square">x²</button>
+              <button type="button" class="key key-sci" data-insert="^" aria-label="Power">xʸ</button>
+              <button type="button" class="key key-sci" data-insert="!" aria-label="Factorial">x!</button>
+
+              <button type="button" class="key key-sci key-fn" data-insert="(" aria-label="Open parenthesis">(</button>
+              <button type="button" class="key key-sci key-fn" data-insert=")" aria-label="Close parenthesis">)</button>
+              <button type="button" class="key key-sci key-const" data-insert="π" aria-label="Pi">π</button>
+              <button type="button" class="key key-sci key-const" data-insert="e" aria-label="Euler's number">e</button>
+              <button type="button" class="key key-sci" data-action="reciprocal" aria-label="Reciprocal, one over x">1/x</button>
+              <button type="button" class="key key-sci" data-insert="abs(" aria-label="Absolute value">|x|</button>
+
+              <button type="button" class="key key-sci" data-insert="10^" aria-label="Ten to the power of x">10ˣ</button>
+              <button type="button" class="key key-sci" data-insert="e^" aria-label="e to the power of x">eˣ</button>
+              <button type="button" class="key key-sci key-sci-fn" data-insert="cbrt(" aria-label="Cube root">∛</button>
+              <button type="button" class="key key-sci" data-insert="E" aria-label="Exponent">EXP</button>
+              <button type="button" class="key key-sci key-const" data-insert="ans" aria-label="Previous answer">Ans</button>
+              <button type="button" class="key key-sci" data-insert="%" aria-label="Percent">%</button>
+            </div>
+
+            <!-- Main keypad -->
+            <div class="mt-1.5 grid grid-cols-4 gap-1.5 sm:gap-2" role="group" aria-label="Number pad">
+              <button type="button" class="key key-danger" data-action="clear" aria-label="All clear">AC</button>
+              <button type="button" class="key key-fn" data-action="backspace" aria-label="Delete last character">DEL</button>
+              <button type="button" class="key key-fn" data-insert="%" aria-label="Percent">%</button>
+              <button type="button" class="key key-op" data-insert="÷" aria-label="Divide">÷</button>
+
+              <button type="button" class="key key-fn" data-insert="(" aria-label="Open parenthesis">(</button>
+              <button type="button" class="key key-fn" data-insert=")" aria-label="Close parenthesis">)</button>
+              <button type="button" class="key key-fn" data-insert="^" aria-label="Power">xʸ</button>
+              <button type="button" class="key key-op" data-insert="×" aria-label="Multiply">×</button>
+
+              <button type="button" class="key key-num" data-insert="7">7</button>
+              <button type="button" class="key key-num" data-insert="8">8</button>
+              <button type="button" class="key key-num" data-insert="9">9</button>
+              <button type="button" class="key key-op" data-insert="−" aria-label="Subtract">−</button>
+
+              <button type="button" class="key key-num" data-insert="4">4</button>
+              <button type="button" class="key key-num" data-insert="5">5</button>
+              <button type="button" class="key key-num" data-insert="6">6</button>
+              <button type="button" class="key key-op" data-insert="+" aria-label="Add">+</button>
+
+              <button type="button" class="key key-num" data-insert="1">1</button>
+              <button type="button" class="key key-num" data-insert="2">2</button>
+              <button type="button" class="key key-num" data-insert="3">3</button>
+              <button type="button" class="key key-equals row-span-2" data-action="equals" aria-label="Equals">=</button>
+
+              <button type="button" class="key key-fn" data-action="negate" aria-label="Toggle sign">±</button>
+              <button type="button" class="key key-num" data-insert="0">0</button>
+              <button type="button" class="key key-num" data-insert="." aria-label="Decimal point">.</button>
+            </div>
+
+            <p class="mt-3 px-1 text-center text-[10px] leading-relaxed text-slate-400">
+              Tip: use your keyboard too — <span class="text-slate-500">Enter</span> to solve, <span class="text-slate-500">Esc</span> to clear, <span class="text-slate-500">↑</span> for history.
+            </p>
+          </div>
+        </div>
+
+        <!-- Side panel -->
+        <aside class="space-y-4">
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-soft">
+            <div class="flex items-center justify-between">
+              <h2 class="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-4 w-4 text-indigo-500" aria-hidden="true">
+                  <path d="M3 12a9 9 0 109-9 9 9 0 00-9 9z" stroke-linecap="round" />
+                  <path d="M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                History
+              </h2>
+              <button id="clearHistory" type="button" class="text-[11px] font-medium text-slate-400 transition hover:text-rose-500">Clear</button>
+            </div>
+            <div id="historyList" class="thin-scroll mt-3 max-h-64 space-y-1 overflow-y-auto pr-1">
+              <p class="px-1 py-2 text-xs leading-relaxed text-slate-400">No calculations yet. Your history will appear here.</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-soft">
+            <h2 class="text-sm font-semibold text-slate-900">Quick tips</h2>
+            <ul class="mt-2.5 space-y-2 text-xs leading-relaxed text-slate-500">
+              <li class="flex gap-2"><span class="text-indigo-500">→</span><span>Use <code class="font-mono text-slate-700">log(2, 8)</code> for a logarithm with base 2.</span></li>
+              <li class="flex gap-2"><span class="text-indigo-500">→</span><span>Implicit multiplication works: <code class="font-mono text-slate-700">2π</code>, <code class="font-mono text-slate-700">3(4+1)</code>, <code class="font-mono text-slate-700">2sin(30)</code>.</span></li>
+              <li class="flex gap-2"><span class="text-indigo-500">→</span><span>Percent is mathematical: <code class="font-mono text-slate-700">50+10%</code> → <code class="font-mono text-slate-700">55</code>.</span></li>
+              <li class="flex gap-2"><span class="text-indigo-500">→</span><span>DEG/RAD affects trigonometric functions only.</span></li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-emerald-200/70 bg-emerald-50/70 p-4">
+            <p class="text-xs font-semibold text-emerald-800">100% local &amp; private</p>
+            <p class="mt-1 text-[11px] leading-relaxed text-emerald-700/80">Calculations never leave your device. History and memory are saved only in this browser.</p>
+          </div>
+        </aside>
+      </div>
+
+      <p class="mx-auto mt-6 max-w-4xl text-center text-xs text-slate-400">
+        Need the full reference? <a href="index.html#guide" class="font-medium text-indigo-600 underline-offset-2 hover:underline">Read the guide</a> or <a href="index.html" class="font-medium text-indigo-600 underline-offset-2 hover:underline">back to the landing page</a>.
+      </p>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-slate-200/80 bg-white/60 py-6">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 text-xs text-slate-500 sm:flex-row sm:px-6">
+      <p class="flex items-center gap-2">
+        <span class="grid h-6 w-6 place-items-center rounded-md bg-gradient-to-br from-indigo-500 to-cyan-400 text-white">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="h-3.5 w-3.5" aria-hidden="true">
+            <rect x="5" y="2.5" width="14" height="19" rx="2.5" /><path d="M8.5 7h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h7" stroke-linecap="round" />
+          </svg>
+        </span>
+        CalcPro · MIT © 2026 Maryam Mumtaz
+      </p>
+      <div class="flex items-center gap-5 font-medium">
+        <a href="index.html" class="transition hover:text-slate-900">Home</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator" target="_blank" rel="noopener noreferrer" class="transition hover:text-slate-900">GitHub</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="transition hover:text-slate-900">Docs</a>
+        <a href="https://github.com/MaryamMumtaz-piaic/calcpro-calculator/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="transition hover:text-slate-900">License</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="pointer-events-none fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 translate-y-2 rounded-full border border-slate-800 bg-slate-900 px-4 py-2 text-xs font-medium text-white opacity-0 shadow-2xl shadow-slate-900/30 transition duration-200" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <div class="fixed inset-x-4 bottom-4 z-[70] rounded-xl border border-amber-300 bg-amber-50 p-4 text-center text-sm text-amber-800">
+      CalcPro needs JavaScript to calculate. Please enable it and reload the page.
+    </div>
+  </noscript>
+
+  <script>
+    /* ============================================================
+       CalcPro — single-file calculator
+       A small, dependency-free expression engine + UI controller.
+       No eval(), no new Function(), no external libraries.
+       ============================================================ */
+    (() => {
+      'use strict';
+
+      /* ----------------------------------------------------------
+         1. Math engine
+         ---------------------------------------------------------- */
+      class CalcError extends Error {}
+
+      const D2R = Math.PI / 180;
+      const R2D = 180 / Math.PI;
+
+      let angleMode = 'DEG';
+      let lastAns = 0;
+
+      const CONSTANTS = {
+        pi: () => Math.PI,
+        tau: () => Math.PI * 2,
+        e: () => Math.E,
+        ans: () => lastAns
+      };
+
+      const FUNCTION_ARITY = {
+        sin: [1], cos: [1], tan: [1],
+        asin: [1], acos: [1], atan: [1],
+        sinh: [1], cosh: [1], tanh: [1],
+        asinh: [1], acosh: [1], atanh: [1],
+        sqrt: [1], cbrt: [1], abs: [1], exp: [1],
+        ln: [1], log: [1, 2],
+        floor: [1], ceil: [1], round: [1], sign: [1]
+      };
+
+      function normalize(value) {
+        if (!Number.isFinite(value)) return value;
+        if (Object.is(value, -0) || value === 0) return 0;
+        const abs = Math.abs(value);
+        // Preserve very large / very small magnitudes; round everything else
+        // to 12 significant digits to avoid floating point noise (0.1 + 0.2).
+        if (abs >= 1e15 || abs < 1e-12) return value;
+        return Number(value.toPrecision(12));
+      }
+
+      function formatNumber(value) {
+        if (!Number.isFinite(value)) throw new CalcError('Result is not a finite number');
+        if (value === 0) return '0';
+        const abs = Math.abs(value);
+        if (abs >= 1e12 || abs < 1e-9) {
+          return value.toExponential(11)
+            .replace(/\.?0+e/, 'e')
+            .replace('e+', 'e');
+        }
+        return String(Number(value.toPrecision(12)));
+      }
+
+      function closeParentheses(source) {
+        let depth = 0;
+        for (const char of source) {
+          if (char === '(') depth += 1;
+          else if (char === ')') {
+            depth -= 1;
+            if (depth < 0) throw new CalcError('Unmatched ")"');
+          }
+        }
+        return source + ')'.repeat(depth);
+      }
+
+      function tokenize(input) {
+        // Display symbols are normalized to parser-friendly tokens.
+        const source = String(input)
+          .replace(/×/g, '*')
+          .replace(/÷/g, '/')
+          .replace(/−/g, '-')
+          .replace(/π/g, 'pi')
+          .replace(/√/g, 'sqrt')
+          .replace(/∛/g, 'cbrt');
+
+        const tokens = [];
+        let index = 0;
+
+        while (index < source.length) {
+          const char = source[index];
+
+          if (/\s/.test(char)) { index += 1; continue; }
+
+          if (/[0-9.]/.test(char)) {
+            const start = index;
+            let seenDot = false;
+
+            while (index < source.length && /[0-9.]/.test(source[index])) {
+              if (source[index] === '.') {
+                if (seenDot) break;
+                seenDot = true;
+              }
+              index += 1;
+            }
+
+            // Scientific notation: 1.5E3, 2e-4. Lowercase "e" is only treated
+            // as an exponent when it is followed by a valid number.
+            if (source[index] === 'E' || source[index] === 'e') {
+              let lookahead = index + 1;
+              if (source[lookahead] === '+' || source[lookahead] === '-') lookahead += 1;
+              if (/[0-9]/.test(source[lookahead] || '')) {
+                lookahead += 1;
+                while (/[0-9]/.test(source[lookahead] || '')) lookahead += 1;
+                index = lookahead;
+              }
+            }
+
+            const raw = source.slice(start, index);
+            const value = Number(raw);
+            if (!Number.isFinite(value)) throw new CalcError('Invalid number');
+            tokens.push({ type: 'number', value });
+            continue;
+          }
+
+          if (/[a-zA-Z]/.test(char)) {
+            const start = index;
+            while (index < source.length && /[a-zA-Z]/.test(source[index])) index += 1;
+            const word = source.slice(start, index).toLowerCase();
+            if (word === 'mod') tokens.push({ type: 'operator', value: 'mod' });
+            else tokens.push({ type: 'identifier', value: word });
+            continue;
+          }
+
+          if ('+-*/^!%'.includes(char)) {
+            tokens.push({ type: 'operator', value: char });
+            index += 1;
+            continue;
+          }
+
+          if (char === '(') { tokens.push({ type: 'lparen' }); index += 1; continue; }
+          if (char === ')') { tokens.push({ type: 'rparen' }); index += 1; continue; }
+          if (char === ',') { tokens.push({ type: 'comma' }); index += 1; continue; }
+
+          throw new CalcError('Unexpected "' + char + '"');
+        }
+
+        return tokens;
+      }
+
+      function parse(tokens) {
+        let position = 0;
+
+        const peek = () => tokens[position];
+        const consume = () => tokens[position++];
+
+        function expect(type, label) {
+          const token = peek();
+          if (!token || token.type !== type) throw new CalcError('Expected ' + label);
+          return consume();
+        }
+
+        function parseExpression() {
+          return parseAddSubtract();
+        }
+
+        function parseAddSubtract() {
+          let node = parseMultiplyDivide();
+          while (peek() && peek().type === 'operator' && (peek().value === '+' || peek().value === '-')) {
+            const operator = consume().value;
+            node = { type: 'binary', operator, left: node, right: parseMultiplyDivide() };
+          }
+          return node;
+        }
+
+        function parseMultiplyDivide() {
+          let node = parseUnary();
+
+          while (true) {
+            const token = peek();
+            if (!token) break;
+
+            if (token.type === 'operator' && (token.value === '*' || token.value === '/' || token.value === 'mod')) {
+              consume();
+              node = { type: 'binary', operator: token.value, left: node, right: parseUnary() };
+              continue;
+            }
+
+            // Implicit multiplication: 2π, 3(4+1), 2sin(30), (1+1)(2+2)
+            if (token.type === 'number' || token.type === 'identifier' || token.type === 'lparen') {
+              node = { type: 'binary', operator: '*', left: node, right: parseUnary() };
+              continue;
+            }
+
+            break;
+          }
+
+          return node;
+        }
+
+        function parseUnary() {
+          const token = peek();
+          if (token && token.type === 'operator' && (token.value === '+' || token.value === '-')) {
+            consume();
+            return { type: 'unary', operator: token.value, operand: parseUnary() };
+          }
+          return parsePower();
+        }
+
+        function parsePower() {
+          const base = parsePostfix();
+          const token = peek();
+          if (token && token.type === 'operator' && token.value === '^') {
+            consume();
+            return { type: 'binary', operator: '^', left: base, right: parseUnary() };
+          }
+          return base;
+        }
+
+        function parsePostfix() {
+          let node = parsePrimary();
+          while (peek() && peek().type === 'operator' && (peek().value === '!' || peek().value === '%')) {
+            const operator = consume().value;
+            node = { type: 'postfix', operator, operand: node };
+          }
+          return node;
+        }
+
+        function parsePrimary() {
+          const token = peek();
+          if (!token) throw new CalcError('Incomplete expression');
+
+          if (token.type === 'number') {
+            consume();
+            return { type: 'number', value: token.value };
+          }
+
+          if (token.type === 'lparen') {
+            consume();
+            const expression = parseExpression();
+            expect('rparen', '")"');
+            return expression;
+          }
+
+          if (token.type === 'identifier') {
+            consume();
+            const name = token.value;
+
+            if (peek() && peek().type === 'lparen') {
+              if (!Object.prototype.hasOwnProperty.call(FUNCTION_ARITY, name)) {
+                throw new CalcError('Unknown function "' + name + '"');
+              }
+              consume();
+              const args = [];
+              if (peek() && peek().type !== 'rparen') {
+                args.push(parseExpression());
+                while (peek() && peek().type === 'comma') {
+                  consume();
+                  args.push(parseExpression());
+                }
+              }
+              expect('rparen', '")"');
+              return { type: 'call', name, args };
+            }
+
+            if (Object.prototype.hasOwnProperty.call(CONSTANTS, name)) {
+              return { type: 'constant', name };
+            }
+            throw new CalcError('Unknown function "' + name + '"');
+          }
+
+          throw new CalcError('Incomplete expression');
+        }
+
+        const ast = parseExpression();
+        if (position < tokens.length) throw new CalcError('Unexpected input');
+        return ast;
+      }
+
+      function factorial(value) {
+        if (!Number.isInteger(value) || value < 0) throw new CalcError('Factorial needs a non-negative integer');
+        if (value > 170) throw new CalcError('Result is too large');
+        let result = 1;
+        for (let i = 2; i <= value; i += 1) result *= i;
+        return result;
+      }
+
+      function angular(value) {
+        return angleMode === 'DEG' ? value * D2R : value;
+      }
+
+      function fromAngular(value) {
+        return angleMode === 'DEG' ? value * R2D : value;
+      }
+
+      function requireArgs(name, args, count) {
+        if (args.length !== count) {
+          throw new CalcError(name + '() expects ' + count + ' argument' + (count === 1 ? '' : 's'));
+        }
+      }
+
+      function applyFunction(name, args) {
+        switch (name) {
+          case 'sin': {
+            requireArgs(name, args, 1);
+            const value = Math.sin(angular(args[0]));
+            return Math.abs(value) < 1e-12 ? 0 : value;
+          }
+          case 'cos': {
+            requireArgs(name, args, 1);
+            const value = Math.cos(angular(args[0]));
+            return Math.abs(value) < 1e-12 ? 0 : value;
+          }
+          case 'tan': {
+            requireArgs(name, args, 1);
+            const radians = angular(args[0]);
+            if (Math.abs(Math.cos(radians)) < 1e-12) throw new CalcError('tan is undefined at this angle');
+            return Math.tan(radians);
+          }
+          case 'asin': {
+            requireArgs(name, args, 1);
+            if (args[0] < -1 || args[0] > 1) throw new CalcError('asin() expects a value from -1 to 1');
+            return fromAngular(Math.asin(args[0]));
+          }
+          case 'acos': {
+            requireArgs(name, args, 1);
+            if (args[0] < -1 || args[0] > 1) throw new CalcError('acos() expects a value from -1 to 1');
+            return fromAngular(Math.acos(args[0]));
+          }
+          case 'atan': {
+            requireArgs(name, args, 1);
+            return fromAngular(Math.atan(args[0]));
+          }
+          case 'sinh': requireArgs(name, args, 1); return Math.sinh(args[0]);
+          case 'cosh': requireArgs(name, args, 1); return Math.cosh(args[0]);
+          case 'tanh': requireArgs(name, args, 1); return Math.tanh(args[0]);
+          case 'asinh': requireArgs(name, args, 1); return Math.asinh(args[0]);
+          case 'acosh': {
+            requireArgs(name, args, 1);
+            if (args[0] < 1) throw new CalcError('acosh() expects a value of at least 1');
+            return Math.acosh(args[0]);
+          }
+          case 'atanh': {
+            requireArgs(name, args, 1);
+            if (args[0] <= -1 || args[0] >= 1) throw new CalcError('atanh() expects a value between -1 and 1');
+            return Math.atanh(args[0]);
+          }
+          case 'sqrt': {
+            requireArgs(name, args, 1);
+            if (args[0] < 0) throw new CalcError('Square root of a negative number is undefined');
+            return Math.sqrt(args[0]);
+          }
+          case 'cbrt': requireArgs(name, args, 1); return Math.cbrt(args[0]);
+          case 'abs': requireArgs(name, args, 1); return Math.abs(args[0]);
+          case 'exp': requireArgs(name, args, 1); return Math.exp(args[0]);
+          case 'ln': {
+            requireArgs(name, args, 1);
+            if (args[0] <= 0) throw new CalcError('ln() expects a positive number');
+            return Math.log(args[0]);
+          }
+          case 'log': {
+            if (args.length === 1) {
+              if (args[0] <= 0) throw new CalcError('log() expects a positive number');
+              return Math.log10(args[0]);
+            }
+            if (args.length === 2) {
+              const [base, value] = args;
+              if (base <= 0 || base === 1) throw new CalcError('Log base must be positive and not equal to 1');
+              if (value <= 0) throw new CalcError('log() expects a positive number');
+              return Math.log(value) / Math.log(base);
+            }
+            throw new CalcError('log() expects 1 or 2 arguments');
+          }
+          case 'floor': requireArgs(name, args, 1); return Math.floor(args[0]);
+          case 'ceil': requireArgs(name, args, 1); return Math.ceil(args[0]);
+          case 'round': requireArgs(name, args, 1); return Math.round(args[0]);
+          case 'sign': requireArgs(name, args, 1); return Math.sign(args[0]);
+          default:
+            throw new CalcError('Unknown function "' + name + '"');
+        }
+      }
+
+      function evaluateNode(node) {
+        switch (node.type) {
+          case 'number':
+            return node.value;
+
+          case 'constant':
+            return CONSTANTS[node.name]();
+
+          case 'unary': {
+            const value = evaluateNode(node.operand);
+            return node.operator === '-' ? -value : value;
+          }
+
+          case 'postfix': {
+            const value = evaluateNode(node.operand);
+            if (node.operator === '!') return factorial(value);
+            return value / 100; // percent
+          }
+
+          case 'call':
+            return applyFunction(node.name, node.args.map(evaluateNode));
+
+          case 'binary': {
+            // Smart percentage: 50 + 10% = 55, 200 - 10% = 180.
+            if ((node.operator === '+' || node.operator === '-') &&
+                node.right.type === 'postfix' && node.right.operator === '%') {
+              const base = evaluateNode(node.left);
+              const percent = evaluateNode(node.right.operand);
+              const delta = base * percent / 100;
+              return node.operator === '+' ? base + delta : base - delta;
+            }
+
+            const left = evaluateNode(node.left);
+            const right = evaluateNode(node.right);
+
+            switch (node.operator) {
+              case '+': return left + right;
+              case '-': return left - right;
+              case '*': return left * right;
+              case '/':
+                if (right === 0) throw new CalcError('Division by zero');
+                return left / right;
+              case 'mod':
+                if (right === 0) throw new CalcError('Division by zero');
+                return left % right;
+              case '^': {
+                if (left === 0 && right < 0) throw new CalcError('Division by zero');
+                const result = Math.pow(left, right);
+                if (Number.isNaN(result)) throw new CalcError('Undefined result');
+                return result;
+              }
+              default:
+                throw new CalcError('Unknown operator');
+            }
+          }
+
+          default:
+            throw new CalcError('Invalid expression');
+        }
+      }
+
+      function evaluate(expression, options = {}) {
+        const shouldCommit = options.commit !== false;
+        let source = String(expression ?? '').trim();
+        if (!source) throw new CalcError('Enter an expression');
+
+        source = closeParentheses(source);
+        const tokens = tokenize(source);
+        if (!tokens.length) throw new CalcError('Enter an expression');
+
+        const ast = parse(tokens);
+        const result = normalize(evaluateNode(ast));
+
+        if (Number.isNaN(result)) throw new CalcError('Undefined result');
+        if (!Number.isFinite(result)) throw new CalcError('Result is too large');
+
+        if (shouldCommit) lastAns = result;
+        return result;
+      }
+
+      // Public, reusable engine API.
+      window.CalcPro = Object.freeze({
+        evaluate,
+        format: formatNumber,
+        normalize,
+        closeParentheses,
+        setAngleMode(mode) {
+          if (mode === 'DEG' || mode === 'RAD') angleMode = mode;
+        },
+        getAngleMode() {
+          return angleMode;
+        },
+        resetAnswer() {
+          lastAns = 0;
+        }
+      });
+
+      /* ----------------------------------------------------------
+         2. UI controller
+         ---------------------------------------------------------- */
+      const STORAGE_KEY = 'calcpro:v1';
+
+      const state = {
+        expression: '',
+        result: 0,
+        display: '0',
+        justEvaluated: false,
+        memory: 0,
+        mode: 'scientific',
+        angle: 'DEG',
+        history: []
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const els = {
+        expr: $('exprDisplay'),
+        result: $('resultDisplay'),
+        error: $('errorText'),
+        live: $('liveResult'),
+        displayMode: $('displayMode'),
+        angleBadge: $('angleBadge'),
+        memoryBadge: $('memoryBadge'),
+        scientificPanel: $('scientificPanel'),
+        angleWrap: $('angleWrap'),
+        history: $('historyList'),
+        clearHistory: $('clearHistory'),
+        toast: $('toast')
+      };
+
+      function save() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            memory: state.memory,
+            history: state.history.slice(0, 50),
+            mode: state.mode,
+            angle: state.angle
+          }));
+        } catch (_) { /* storage may be unavailable */ }
+      }
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const saved = JSON.parse(raw);
+          if (!saved || typeof saved !== 'object') return;
+
+          if (Number.isFinite(saved.memory)) state.memory = saved.memory;
+          if (Array.isArray(saved.history)) {
+            state.history = saved.history
+              .filter((item) => item && typeof item.expr === 'string' && typeof item.result === 'string')
+              .slice(0, 50);
+          }
+          if (saved.mode === 'standard' || saved.mode === 'scientific') state.mode = saved.mode;
+          if (saved.angle === 'DEG' || saved.angle === 'RAD') state.angle = saved.angle;
+        } catch (_) { /* ignore corrupt storage */ }
+      }
+
+      let toastTimer = 0;
+      function toast(message) {
+        if (!els.toast) return;
+        els.toast.textContent = message;
+        els.toast.classList.remove('opacity-0', 'translate-y-2');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          els.toast.classList.add('opacity-0', 'translate-y-2');
+        }, 1800);
+      }
+
+      function updateBadges() {
+        els.angleBadge.textContent = state.angle;
+        els.displayMode.textContent = state.mode === 'scientific' ? 'Scientific' : 'Standard';
+        els.memoryBadge.classList.toggle('hidden', state.memory === 0);
+        els.memoryBadge.title = 'Memory: ' + (() => {
+          try { return formatNumber(state.memory); } catch (_) { return '0'; }
+        })();
+      }
+
+      function refresh() {
+        els.expr.textContent = state.expression || '0';
+        els.expr.scrollLeft = els.expr.scrollWidth;
+        els.error.textContent = '';
+        els.result.classList.remove('is-muted', 'is-error');
+
+        if (state.justEvaluated) {
+          els.result.textContent = state.display;
+          els.result.classList.remove('is-muted');
+          els.result.scrollLeft = els.result.scrollWidth;
+          updateBadges();
+          return;
+        }
+
+        if (!state.expression.trim()) {
+          els.result.textContent = '0';
+          els.result.classList.add('is-muted');
+          updateBadges();
+          return;
+        }
+
+        try {
+          const preview = window.CalcPro.evaluate(state.expression, { commit: false });
+          els.result.textContent = formatNumber(preview);
+          els.result.classList.remove('is-muted');
+        } catch (_) {
+          els.result.textContent = '—';
+          els.result.classList.add('is-muted');
+        }
+        els.result.scrollLeft = els.result.scrollWidth;
+        updateBadges();
+      }
+
+      function insert(text) {
+        if (text === 'E') {
+          if (state.justEvaluated || !/[0-9]$/.test(state.expression)) return;
+        }
+
+        if (state.justEvaluated) {
+          // Continue from the result for operators (and "x²"), start fresh
+          // for values — including multi-character inserts such as "-5".
+          const continues = /^(?:[+\-×÷*/^!%]|\^[23])$/.test(text);
+          state.expression = continues ? String(state.result) : '';
+          state.justEvaluated = false;
+        }
+
+        if (text === '.') {
+          const trailing = state.expression.match(/[0-9.]*$/);
+          if (trailing && trailing[0].includes('.')) return;
+        }
+
+        state.expression += text;
+        refresh();
+        save();
+      }
+
+      function backspace() {
+        if (state.justEvaluated) { clearAll(); return; }
+        if (!state.expression) return;
+
+        const call = state.expression.match(/(?:asinh|acosh|atanh|asin|acos|atan|sinh|cosh|tanh|sin|cos|tan|sqrt|cbrt|abs|exp|floor|ceil|round|ln|log)\($/i);
+        state.expression = call
+          ? state.expression.slice(0, -call[0].length)
+          : state.expression.slice(0, -1);
+
+        refresh();
+        save();
+      }
+
+      function clearAll() {
+        state.expression = '';
+        state.result = 0;
+        state.display = '0';
+        state.justEvaluated = false;
+        els.error.textContent = '';
+        refresh();
+        save();
+      }
+
+      function renderHistory() {
+        els.history.textContent = '';
+
+        if (!state.history.length) {
+          const empty = document.createElement('p');
+          empty.className = 'px-1 py-2 text-xs leading-relaxed text-slate-500';
+          empty.textContent = 'No calculations yet. Your history will appear here.';
+          els.history.appendChild(empty);
+          return;
+        }
+
+        state.history.forEach((item, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'history-item';
+          button.title = 'Load this expression';
+
+          const expressionLine = document.createElement('span');
+          expressionLine.className = 'block truncate font-mono text-[11px] text-slate-500';
+          expressionLine.textContent = item.expr;
+
+          const resultLine = document.createElement('span');
+          resultLine.className = 'mt-0.5 block truncate font-mono text-sm text-slate-200';
+          resultLine.textContent = '= ' + item.result;
+
+          button.append(expressionLine, resultLine);
+          button.addEventListener('click', () => loadHistory(index));
+          els.history.appendChild(button);
+        });
+      }
+
+      function loadHistory(index) {
+        const item = state.history[index];
+        if (!item) return;
+        state.expression = item.expr;
+        state.justEvaluated = false;
+        refresh();
+        save();
+        toast('History loaded');
+        document.getElementById('calculator').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function commit() {
+        if (!state.expression.trim()) return;
+
+        try {
+          const closed = window.CalcPro.closeParentheses(state.expression);
+          const value = window.CalcPro.evaluate(closed, { commit: true });
+          const display = formatNumber(value);
+
+          state.expression = closed;
+          state.result = value;
+          state.display = display;
+          state.justEvaluated = true;
+
+          const latest = state.history[0];
+          if (!latest || latest.expr !== closed || latest.result !== display) {
+            state.history.unshift({ expr: closed, result: display });
+            state.history = state.history.slice(0, 50);
+          }
+
+          els.error.textContent = '';
+          els.live.textContent = closed + ' equals ' + display;
+          refresh();
+          renderHistory();
+          save();
+        } catch (error) {
+          state.justEvaluated = false;
+          els.result.textContent = 'Error';
+          els.result.classList.remove('is-muted');
+          els.result.classList.add('is-error');
+          els.error.textContent = error instanceof CalcError ? error.message : 'Invalid expression';
+          els.live.textContent = 'Error: ' + els.error.textContent;
+          els.result.classList.remove('shake');
+          // Restart the animation if it is already running.
+          void els.result.offsetWidth;
+          els.result.classList.add('shake');
+          window.setTimeout(() => els.result.classList.remove('shake'), 450);
+        }
+      }
+
+      function negate() {
+        if (state.justEvaluated) {
+          state.expression = String(state.result);
+          state.justEvaluated = false;
+        }
+
+        const expression = state.expression.trim();
+        if (!expression) { insert('−'); return; }
+
+        if ((expression.startsWith('−(') || expression.startsWith('-(')) && expression.endsWith(')')) {
+          state.expression = expression.slice(2, -1);
+        } else if (expression.startsWith('−') || expression.startsWith('-')) {
+          state.expression = expression.slice(1);
+        } else {
+          state.expression = '−(' + expression + ')';
+        }
+
+        refresh();
+        save();
+      }
+
+      function reciprocal() {
+        if (state.justEvaluated) {
+          state.expression = String(state.result);
+          state.justEvaluated = false;
+        }
+
+        if (!state.expression.trim()) {
+          insert('1/(');
+          return;
+        }
+
+        state.expression = '1/(' + state.expression + ')';
+        refresh();
+        save();
+      }
+
+      function currentValue() {
+        if (state.justEvaluated) return state.result;
+        if (!state.expression.trim()) return 0;
+        try {
+          return window.CalcPro.evaluate(state.expression, { commit: false });
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function memoryAction(action) {
+        if (action === 'mc') {
+          state.memory = 0;
+          toast('Memory cleared');
+        } else if (action === 'mr') {
+          insert(formatNumber(state.memory));
+          toast('Memory recalled');
+          return;
+        } else {
+          const value = currentValue();
+          if (value === null) { toast('Finish the expression first'); return; }
+
+          if (action === 'ms') { state.memory = value; toast('Stored in memory'); }
+          if (action === 'm+') { state.memory += value; toast('Added to memory'); }
+          if (action === 'm-') { state.memory -= value; toast('Subtracted from memory'); }
+        }
+
+        updateBadges();
+        save();
+      }
+
+      function setMode(mode) {
+        state.mode = mode === 'standard' ? 'standard' : 'scientific';
+        const scientific = state.mode === 'scientific';
+
+        els.scientificPanel.classList.toggle('hidden', !scientific);
+        els.angleWrap.classList.toggle('invisible', !scientific);
+        els.angleWrap.setAttribute('aria-hidden', String(!scientific));
+
+        document.querySelectorAll('[data-mode]').forEach((button) => {
+          const active = button.dataset.mode === state.mode;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-selected', String(active));
+        });
+
+        updateBadges();
+        save();
+      }
+
+      function setAngle(mode) {
+        state.angle = mode === 'RAD' ? 'RAD' : 'DEG';
+        window.CalcPro.setAngleMode(state.angle);
+
+        document.querySelectorAll('[data-angle]').forEach((button) => {
+          const active = button.dataset.angle === state.angle;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-pressed', String(active));
+        });
+
+        updateBadges();
+        refresh();
+        save();
+      }
+
+      function handleAction(action) {
+        switch (action) {
+          case 'clear': clearAll(); break;
+          case 'backspace': backspace(); break;
+          case 'equals': commit(); break;
+          case 'negate': negate(); break;
+          case 'reciprocal': reciprocal(); break;
+          default: break;
+        }
+      }
+
+      /* ----------------------------------------------------------
+         3. Event wiring
+         ---------------------------------------------------------- */
+      // Mouse clicks release focus so Enter keeps meaning "equals". Keyboard
+      // activation (event.detail === 0) keeps focus for accessibility.
+      function onClick(button, handler) {
+        button.addEventListener('click', (event) => {
+          handler();
+          if (event.detail > 0) button.blur();
+        });
+      }
+
+      document.querySelectorAll('[data-insert]').forEach((button) => {
+        onClick(button, () => insert(button.dataset.insert));
+      });
+
+      document.querySelectorAll('[data-action]').forEach((button) => {
+        onClick(button, () => handleAction(button.dataset.action));
+      });
+
+      document.querySelectorAll('[data-memory]').forEach((button) => {
+        onClick(button, () => memoryAction(button.dataset.memory));
+      });
+
+      document.querySelectorAll('[data-mode]').forEach((button) => {
+        onClick(button, () => setMode(button.dataset.mode));
+      });
+
+      document.querySelectorAll('[data-angle]').forEach((button) => {
+        onClick(button, () => setAngle(button.dataset.angle));
+      });
+
+      els.clearHistory.addEventListener('click', () => {
+        if (!state.history.length) return;
+        if (!window.confirm('Clear all calculation history?')) return;
+        state.history = [];
+        renderHistory();
+        save();
+        toast('History cleared');
+      });
+
+      els.result.addEventListener('click', async () => {
+        const text = state.justEvaluated ? state.display : els.result.textContent;
+        if (!text || text === '—' || text === 'Error') return;
+        try {
+          await navigator.clipboard.writeText(text);
+          toast('Result copied');
+        } catch (_) {
+          toast('Could not copy');
+        }
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+        const target = event.target;
+        if (target instanceof HTMLElement && target.matches('input, textarea, select, [contenteditable="true"]')) return;
+
+        // Let focused buttons handle Enter/Space natively.
+        if ((event.key === 'Enter' || event.key === ' ') &&
+            target instanceof Element && target.closest('button')) {
+          return;
+        }
+
+        const operatorMap = {
+          '*': '×', '/': '÷', '-': '−', '+': '+',
+          '^': '^', '%': '%', '(': '(', ')': ')', '!': '!', '.': '.'
+        };
+
+        if (/^[0-9]$/.test(event.key)) { insert(event.key); return; }
+        if (event.key === 'Enter' || event.key === '=') { event.preventDefault(); commit(); return; }
+        if (event.key === 'Backspace') { event.preventDefault(); backspace(); return; }
+        if (event.key === 'Escape' || event.key === 'Delete') { event.preventDefault(); clearAll(); return; }
+        if (event.key === 'ArrowUp') {
+          if (state.history.length) { event.preventDefault(); loadHistory(0); }
+          return;
+        }
+        if (operatorMap[event.key]) {
+          event.preventDefault();
+          insert(operatorMap[event.key]);
+        }
+      });
+
+      /* ----------------------------------------------------------
+         4. Boot
+         ---------------------------------------------------------- */
+      load();
+      window.CalcPro.setAngleMode(state.angle);
+      setMode(state.mode);
+      setAngle(state.angle);
+      renderHistory();
+      updateBadges();
+      refresh();
+    })();
+  </script>
+</body>
+</html>

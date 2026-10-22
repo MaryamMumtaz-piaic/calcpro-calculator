@@ -1,25 +1,26 @@
 # CalcPro — Standard & Scientific Calculator
 
-**A modern, responsive calculator with a complete scientific toolkit — built as one HTML file.**
+**A light, modern calculator site with a dedicated calculator page — built with HTML, Tailwind CSS and vanilla JavaScript.**
 
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/docs/Web/HTML)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![JavaScript](https://img.shields.io/badge/Vanilla_JS-F7DF1E?style=flat-square&logo=javascript&logoColor=111111)](https://developer.mozilla.org/docs/Web/JavaScript)
-[![Single file](https://img.shields.io/badge/Single_file-index.html-22D3EE?style=flat-square)](#project-structure)
+[![Light theme](https://img.shields.io/badge/Theme-Light-FDE68A?style=flat-square)](#project-structure)
+[![Single-file calculator](https://img.shields.io/badge/Calculator-Single_file-22D3EE?style=flat-square)](#project-structure)
 [![Responsive](https://img.shields.io/badge/Responsive-320px%2B-6366F1?style=flat-square)](#browser-support)
 [![MIT License](https://img.shields.io/badge/License-MIT-34D399?style=flat-square)](LICENSE)
 
-[Live Demo](https://maryammumtaz-piaic.github.io/calcpro-calculator/) · [Features](#features) · [Usage](#usage) · [Supported functions](#supported-functions) · [Run locally](#run-locally) · [License](#license)
+[Live Demo](https://maryammumtaz-piaic.github.io/calcpro-calculator/) · [Calculator Page](https://maryammumtaz-piaic.github.io/calcpro-calculator/calculator.html) · [Features](#features) · [Usage](#usage) · [Supported functions](#supported-functions) · [Run locally](#run-locally) · [License](#license)
 
 ---
 
 ## Overview
 
-**CalcPro** is a fast, private, dependency-free calculator that lives in a single `index.html` file. It combines an everyday **Standard** keypad with a full **Scientific** workspace: trigonometry with DEG/RAD support, powers, roots, logarithms, factorials, constants, memory, and a persistent history panel.
+**CalcPro** is a fast, private calculator site made of two focused pages: a light, modern landing page (`index.html`) and a dedicated calculator workspace (`calculator.html`). The calculator combines an everyday **Standard** keypad with a full **Scientific** mode: trigonometry with DEG/RAD support, powers, roots, logarithms, factorials, constants, memory, and a persistent history panel.
 
 The math is powered by a purpose-built tokenizer and recursive-descent parser — **no `eval()` and no third-party math library** — so operator precedence, parentheses, implicit multiplication, percentages, and domain errors behave correctly.
 
-The same file is also a responsive landing page, making it easy to publish, embed, or use as a starting point for your own project.
+The calculator page is a self-contained `calculator.html`; the landing page is a separate static page that links to it. Both use the same light design language, so the site feels like one product while the calculator stays distraction-free.
 
 > हर गणना, एक ही जगह — सटीक, तेज़ और हर स्क्रीन के लिए।
 
@@ -27,6 +28,8 @@ The same file is also a responsive landing page, making it easy to publish, embe
 
 ## Features
 
+- **A dedicated calculator page** — the app lives at `calculator.html`, away from marketing content, with a focused workspace and zero distractions.
+- **Light, modern design** — soft white surfaces, crisp slate typography, indigo-to-cyan accents, and subtle shadows across both pages.
 - **Two calculators in one** — switch between Standard and Scientific without losing your expression.
 - **Full scientific toolkit** — trig and inverse trig, powers, square/cube roots, natural and base-10 logarithms, arbitrary-base logs, factorial, absolute value, `exp`, `10^x`, `e^x`, `π`, `e`, and `Ans`.
 - **Correct math engine** — tokenizer + recursive-descent parser with proper precedence, right-associative powers, unary operators, implicit multiplication, and smart percentages.
@@ -47,9 +50,10 @@ The same file is also a responsive landing page, making it easy to publish, embe
 
 ## Live demo
 
-**https://maryammumtaz-piaic.github.io/calcpro-calculator/**
+- **Landing page:** https://maryammumtaz-piaic.github.io/calcpro-calculator/
+- **Calculator page:** https://maryammumtaz-piaic.github.io/calcpro-calculator/calculator.html
 
-The demo is deployed from the `main` branch with GitHub Pages.
+Both pages are deployed from the `main` branch with GitHub Pages.
 
 ---
 
@@ -123,9 +127,9 @@ sin(30)cos(60)     → 0.25     (DEG)
 
 ## Run locally
 
-### Option 1 — open the file
+### Option 1 — open the files
 
-Download or clone the repository, then open `index.html` in any modern browser.
+Download or clone the repository, then open `index.html` for the landing page or `calculator.html` for the calculator.
 
 ```bash
 git clone https://github.com/MaryamMumtaz-piaic/calcpro-calculator.git
@@ -144,13 +148,15 @@ python -m http.server 8000
 npx serve .
 ```
 
-Then visit **http://localhost:8000**.
+Then visit **http://localhost:8000** for the landing page or **http://localhost:8000/calculator.html** for the calculator.
 
 > An internet connection is needed the first time the page loads Tailwind CSS and Google Fonts from their CDNs. All calculator logic runs locally.
 
 ---
 
 ## Usage
+
+Open the landing page and choose **Open calculator**, or go directly to `calculator.html`.
 
 1. Choose **Standard** or **Scientific** at the top of the calculator.
 2. Select **DEG** or **RAD** before using trigonometry.
@@ -215,25 +221,31 @@ Live previews call the engine with `{ commit: false }`, so typing `ans + 1` show
 
 ```text
 calcpro-calculator/
-├── index.html      # The entire application: markup, Tailwind config, CSS, math engine and UI
-├── README.md       # This document
-├── PROMPT.md       # Reusable AI coding-agent prompt used to build the project
-├── LICENSE         # MIT license
-└── .gitignore      # OS, editor, log and dependency ignores
+├── index.html       # Light-themed landing page: hero, features, workspace showcase, guide
+├── calculator.html  # Dedicated calculator page: markup, Tailwind config, CSS, math engine and UI
+├── README.md        # This document
+├── PROMPT.md        # Reusable AI coding-agent prompt used to build the project
+├── LICENSE          # MIT license
+└── .gitignore       # OS, editor, log and dependency ignores
 ```
 
 ---
 
 ## Customization
 
-Everything is in `index.html`:
+The site is split into two self-contained pages:
 
-- **Brand and links** — search for `CalcPro`, `MaryamMumtaz-piaic`, and the GitHub URLs.
-- **Colors and fonts** — edit the `tailwind.config` block in `<head>` and the custom properties/classes in `<style>`.
-- **Default mode and angle** — change `mode: 'scientific'` and `angle: 'DEG'` in the `state` object.
-- **History limit** — change the `slice(0, 50)` calls in the UI controller.
-- **Storage key** — change `const STORAGE_KEY = 'calcpro:v1'`.
-- **Math engine** — the engine is a self-contained section at the top of the main script. It can be extracted into its own module if you outgrow the single-file constraint.
+- **`index.html`** — the light landing page. Update the hero, feature copy, showcase preview, guide and CTA here.
+- **`calculator.html`** — the dedicated calculator page. Everything the app needs lives in this one file.
+
+Common edits:
+
+- **Brand and links** — search for `CalcPro`, `MaryamMumtaz-piaic`, and the GitHub URLs in both files.
+- **Colors and fonts** — edit the `tailwind.config` block in `<head>` and the custom CSS classes in `<style>` in both files. Both use the same indigo/cyan light palette.
+- **Default mode and angle** — in `calculator.html`, change `mode: 'scientific'` and `angle: 'DEG'` in the `state` object.
+- **History limit** — in `calculator.html`, change the `slice(0, 50)` calls in the UI controller.
+- **Storage key** — in `calculator.html`, change `const STORAGE_KEY = 'calcpro:v1'`.
+- **Math engine** — in `calculator.html`, the engine is a self-contained section at the top of the main script. It can be extracted into its own module if you outgrow the single-file constraint; the public API is exposed as `window.CalcPro`.
 
 ### Deploying to GitHub Pages
 
@@ -241,7 +253,7 @@ Everything is in `index.html`:
 2. Go to **Settings → Pages**.
 3. Under **Build and deployment**, choose **Deploy from a branch**.
 4. Select `main` and `/ (root)`, then save.
-5. The site is published at `https://<username>.github.io/<repository>/`.
+5. The site is published at `https://<username>.github.io/<repository>/`, and the calculator at `…/calculator.html`.
 
 ---
 
@@ -262,10 +274,11 @@ It uses modern JavaScript (`??`, optional chaining, `Object.freeze`) and CSS (`b
 Contributions are welcome. To keep the project true to its purpose:
 
 1. Fork the repository and create a feature branch.
-2. Keep the app in a **single `index.html`** file — no build step, no frameworks.
-3. Do not introduce `eval()` or a math library.
-4. Verify the expressions in [Supported functions](#supported-functions) still produce the documented results.
-5. Open a pull request describing the change and the reasoning behind it.
+2. Keep `calculator.html` a **self-contained single file** — no build step, no frameworks, no shared runtime dependencies.
+3. Keep the light theme consistent across `index.html` and `calculator.html`.
+4. Do not introduce `eval()` or a math library.
+5. Verify the expressions in [Supported functions](#supported-functions) still produce the documented results.
+6. Open a pull request describing the change and the reasoning behind it.
 
 Bug reports and feature requests are welcome in [Issues](https://github.com/MaryamMumtaz-piaic/calcpro-calculator/issues).
 
